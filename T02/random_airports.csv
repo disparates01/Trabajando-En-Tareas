@@ -1,0 +1,736 @@
+Pais 1,Pais 2
+Austria,Costa rica
+Austria,Croatia
+Austria,Spain
+Austria,Turkey
+Austria,Denmark
+Austria,Libya
+Austria,Portugal
+Austria,United arab emirates
+Austria,France
+Austria,United states
+Austria,India
+Austria,Thailand
+Austria,Egypt
+Austria,Italy
+Austria,Nepal
+Austria,Kenya
+Austria,Brazil
+Austria,New zealand
+Australia,Kenya
+Australia,South africa
+Australia,United arab emirates
+Australia,Germany
+Australia,Brazil
+Australia,India
+Australia,Thailand
+Australia,Japan
+Australia,Denmark
+Australia,Iran
+Australia,Israel
+Australia,Croatia
+Australia,Uruguay
+Australia,Chile
+Australia,Qatar
+Argentina,United states
+Argentina,Colombia
+Argentina,Switzerland
+Argentina,China
+Argentina,Saudi arabia
+Argentina,Italy
+Argentina,Nepal
+Argentina,Mexico
+Argentina,Hong kong
+Argentina,Egypt
+Argentina,Japan
+Argentina,Costa rica
+Argentina,United kingdom
+Argentina,New zealand
+Argentina,Russia
+Argentina,Chile
+Argentina,Norway
+Brazil,Hong kong
+Brazil,Nepal
+Brazil,Turkey
+Brazil,United states
+Brazil,South africa
+Brazil,Argentina
+Brazil,United arab emirates
+Brazil,Austria
+Brazil,Mexico
+Brazil,Uruguay
+Brazil,Italy
+Brazil,Norway
+Brazil,Spain
+Brazil,Iran
+Brazil,Japan
+Brazil,United kingdom
+Brazil,Greece
+Brazil,India
+Colombia,Kenya
+Colombia,Netherlands
+Colombia,Uruguay
+Colombia,Canada
+Colombia,Qatar
+Colombia,Mexico
+Colombia,Denmark
+Colombia,Portugal
+Colombia,Italy
+Colombia,Libya
+Colombia,Thailand
+Colombia,Spain
+Colombia,United kingdom
+Colombia,Israel
+Colombia,India
+Colombia,Germany
+Colombia,Greece
+Canada,Greece
+Canada,New zealand
+Canada,Japan
+Canada,France
+Canada,Qatar
+Canada,Norway
+Canada,Germany
+Canada,Libya
+Canada,Saudi arabia
+Canada,Russia
+Canada,Nepal
+Canada,Netherlands
+Canada,United arab emirates
+Canada,Brazil
+Canada,South africa
+Canada,Australia
+Canada,Egypt
+Canada,Hong kong
+Croatia,United kingdom
+Croatia,Israel
+Croatia,Japan
+Croatia,Uruguay
+Croatia,Kenya
+Croatia,Norway
+Croatia,Libya
+Croatia,Saudi arabia
+Croatia,France
+Croatia,Sweden
+Croatia,South africa
+Croatia,Iran
+Croatia,Canada
+Croatia,Egypt
+Croatia,Germany
+Croatia,Russia
+Croatia,Turkey
+Croatia,China
+Croatia,Switzerland
+Chile,Croatia
+Chile,India
+Chile,Australia
+Chile,Italy
+Chile,Germany
+Chile,Argentina
+Chile,Canada
+Chile,Netherlands
+Chile,United states
+Chile,Saudi arabia
+Chile,South africa
+Chile,Spain
+Chile,Norway
+Chile,United kingdom
+Chile,Austria
+Chile,Brazil
+Chile,Israel
+Chile,New zealand
+China,Hong kong
+China,Canada
+China,Mexico
+China,South korea
+China,Argentina
+China,South africa
+China,United states
+China,France
+China,Costa rica
+China,Croatia
+China,Austria
+China,Spain
+China,Greece
+China,Sweden
+China,Switzerland
+China,Israel
+Costa rica,Norway
+Costa rica,Spain
+Costa rica,Libya
+Costa rica,South korea
+Costa rica,Denmark
+Costa rica,United states
+Costa rica,Saudi arabia
+Costa rica,Colombia
+Costa rica,Canada
+Costa rica,Mexico
+Costa rica,India
+Costa rica,Thailand
+Costa rica,Germany
+Costa rica,Japan
+Costa rica,Kenya
+Denmark,Thailand
+Denmark,Australia
+Denmark,China
+Denmark,South korea
+Denmark,Kenya
+Denmark,Italy
+Denmark,Russia
+Denmark,Austria
+Denmark,Uruguay
+Denmark,Japan
+Denmark,New zealand
+Denmark,Germany
+Denmark,Egypt
+Denmark,United kingdom
+Egypt,Australia
+Egypt,Thailand
+Egypt,India
+Egypt,Russia
+Egypt,Turkey
+Egypt,Chile
+Egypt,China
+Egypt,Sweden
+Egypt,Kenya
+Egypt,Switzerland
+Egypt,United kingdom
+Egypt,Costa rica
+Egypt,Croatia
+Egypt,Qatar
+Egypt,Austria
+Egypt,Denmark
+Egypt,United arab emirates
+Egypt,Iran
+France,Thailand
+France,Denmark
+France,Spain
+France,Portugal
+France,Italy
+France,Croatia
+France,South korea
+France,Brazil
+France,Hong kong
+France,China
+France,Kenya
+France,India
+France,Egypt
+Greece,Libya
+Greece,Croatia
+Greece,Brazil
+Greece,Japan
+Greece,Costa rica
+Greece,Nepal
+Greece,United states
+Greece,India
+Greece,Mexico
+Greece,Italy
+Greece,Thailand
+Greece,Argentina
+Greece,South africa
+Greece,South korea
+Greece,France
+Greece,Colombia
+Germany,South africa
+Germany,Australia
+Germany,Thailand
+Germany,United states
+Germany,Egypt
+Germany,Canada
+Germany,Mexico
+Germany,Argentina
+Germany,Italy
+Germany,Netherlands
+Germany,Costa rica
+Germany,Uruguay
+Germany,Spain
+Germany,Qatar
+Germany,Colombia
+Germany,United arab emirates
+Germany,Iran
+Hong kong,Portugal
+Hong kong,Greece
+Hong kong,Qatar
+Hong kong,Croatia
+Hong kong,Norway
+Hong kong,Costa rica
+Hong kong,United kingdom
+Hong kong,Brazil
+Hong kong,Kenya
+Hong kong,Sweden
+Hong kong,Russia
+Hong kong,Germany
+Hong kong,Egypt
+Hong kong,United states
+Hong kong,South korea
+Hong kong,Saudi arabia
+Iran,Germany
+Iran,Costa rica
+Iran,France
+Iran,Spain
+Iran,Libya
+Iran,Russia
+Iran,Italy
+Iran,Mexico
+Iran,South korea
+Iran,United arab emirates
+Iran,Netherlands
+Iran,South africa
+Iran,Turkey
+Iran,Hong kong
+Iran,Kenya
+Iran,Greece
+Iran,Egypt
+Italy,Hong kong
+Italy,China
+Italy,Thailand
+Italy,Germany
+Italy,United arab emirates
+Italy,Netherlands
+Italy,Argentina
+Italy,Costa rica
+Italy,France
+Italy,Croatia
+Italy,Qatar
+Italy,Colombia
+Italy,Libya
+Italy,United kingdom
+Italy,Austria
+Italy,Switzerland
+Italy,Brazil
+Italy,Japan
+Israel,Qatar
+Israel,Greece
+Israel,United kingdom
+Israel,Spain
+Israel,Libya
+Israel,United arab emirates
+Israel,Iran
+Israel,Denmark
+Israel,United states
+Israel,Russia
+Israel,Switzerland
+Israel,Germany
+Israel,Nepal
+Israel,Egypt
+India,Colombia
+India,Sweden
+India,Saudi arabia
+India,United states
+India,Nepal
+India,United arab emirates
+India,Argentina
+India,Switzerland
+India,United kingdom
+India,Greece
+India,New zealand
+India,Israel
+India,Chile
+India,Austria
+India,Canada
+India,Uruguay
+India,Russia
+Japan,Spain
+Japan,Qatar
+Japan,China
+Japan,Portugal
+Japan,Croatia
+Japan,Argentina
+Japan,France
+Japan,South africa
+Japan,Saudi arabia
+Japan,Colombia
+Japan,Hong kong
+Japan,Russia
+Japan,India
+Japan,Canada
+Japan,Turkey
+Japan,Israel
+Japan,Sweden
+Kenya,India
+Kenya,Australia
+Kenya,Germany
+Kenya,Saudi arabia
+Kenya,Russia
+Kenya,Chile
+Kenya,United states
+Kenya,Uruguay
+Kenya,South africa
+Kenya,Croatia
+Kenya,Qatar
+Kenya,Nepal
+Kenya,Japan
+Libya,Switzerland
+Libya,Germany
+Libya,Netherlands
+Libya,United arab emirates
+Libya,Nepal
+Libya,Egypt
+Libya,South africa
+Libya,Sweden
+Libya,China
+Libya,Colombia
+Libya,Qatar
+Libya,Mexico
+Libya,Canada
+Libya,Croatia
+Libya,Denmark
+Libya,Hong kong
+Libya,Greece
+Libya,United kingdom
+Libya,India
+Mexico,Kenya
+Mexico,Italy
+Mexico,Chile
+Mexico,Switzerland
+Mexico,Argentina
+Mexico,South africa
+Mexico,Iran
+Mexico,Denmark
+Mexico,Qatar
+Mexico,Spain
+Mexico,Portugal
+Mexico,Libya
+Mexico,United kingdom
+Mexico,Israel
+Mexico,Brazil
+Mexico,Costa rica
+Mexico,Nepal
+Mexico,New zealand
+New zealand,Denmark
+New zealand,Portugal
+New zealand,Spain
+New zealand,Japan
+New zealand,Germany
+New zealand,Nepal
+New zealand,Saudi arabia
+New zealand,Sweden
+New zealand,China
+New zealand,South korea
+New zealand,Netherlands
+New zealand,United arab emirates
+New zealand,South africa
+New zealand,Austria
+New zealand,Qatar
+New zealand,Chile
+Netherlands,South africa
+Netherlands,Colombia
+Netherlands,Switzerland
+Netherlands,Sweden
+Netherlands,Nepal
+Netherlands,Hong kong
+Netherlands,Egypt
+Netherlands,Chile
+Netherlands,India
+Netherlands,Costa rica
+Netherlands,France
+Netherlands,Iran
+Netherlands,Portugal
+Netherlands,Denmark
+Netherlands,Mexico
+Netherlands,Qatar
+Netherlands,Spain
+Netherlands,Canada
+Netherlands,Uruguay
+Norway,Turkey
+Norway,Chile
+Norway,Russia
+Norway,Canada
+Norway,United states
+Norway,Iran
+Norway,Netherlands
+Norway,Colombia
+Norway,Libya
+Norway,Spain
+Norway,Croatia
+Norway,Costa rica
+Norway,New zealand
+Norway,Kenya
+Nepal,Russia
+Nepal,Costa rica
+Nepal,Chile
+Nepal,Denmark
+Nepal,Germany
+Nepal,United kingdom
+Nepal,Italy
+Nepal,Thailand
+Nepal,United states
+Nepal,United arab emirates
+Nepal,South korea
+Nepal,Colombia
+Nepal,Mexico
+Nepal,Saudi arabia
+Nepal,Portugal
+Nepal,Canada
+Nepal,Austria
+Portugal,Switzerland
+Portugal,Egypt
+Portugal,Argentina
+Portugal,Nepal
+Portugal,Turkey
+Portugal,South africa
+Portugal,Kenya
+Portugal,China
+Portugal,Spain
+Portugal,Qatar
+Portugal,Mexico
+Portugal,Chile
+Portugal,Russia
+Portugal,Canada
+Portugal,Libya
+Portugal,France
+Portugal,Hong kong
+Portugal,Greece
+Portugal,India
+Qatar,Turkey
+Qatar,Hong kong
+Qatar,India
+Qatar,Australia
+Qatar,Costa rica
+Qatar,Iran
+Qatar,Argentina
+Qatar,Colombia
+Qatar,Israel
+Qatar,Denmark
+Qatar,Norway
+Qatar,Austria
+Qatar,Spain
+Qatar,Japan
+Qatar,United kingdom
+Qatar,New zealand
+Qatar,Brazil
+Russia,Nepal
+Russia,Australia
+Russia,Chile
+Russia,Thailand
+Russia,Canada
+Russia,Iran
+Russia,Denmark
+Russia,Colombia
+Russia,Norway
+Russia,Portugal
+Russia,Uruguay
+Russia,Greece
+Russia,Brazil
+Russia,Turkey
+Russia,New zealand
+Saudi arabia,Egypt
+Saudi arabia,Canada
+Saudi arabia,Thailand
+Saudi arabia,Chile
+Saudi arabia,Hong kong
+Saudi arabia,Mexico
+Saudi arabia,Russia
+Saudi arabia,United states
+Saudi arabia,France
+Saudi arabia,Spain
+Saudi arabia,China
+Saudi arabia,United kingdom
+Saudi arabia,Qatar
+Saudi arabia,Sweden
+Saudi arabia,Costa rica
+Saudi arabia,Nepal
+Switzerland,China
+Switzerland,Turkey
+Switzerland,Nepal
+Switzerland,Canada
+Switzerland,Croatia
+Switzerland,Austria
+Switzerland,Mexico
+Switzerland,Chile
+Switzerland,Libya
+Switzerland,India
+Switzerland,Portugal
+Switzerland,Italy
+Switzerland,Denmark
+Switzerland,Thailand
+Switzerland,Israel
+Switzerland,Germany
+Switzerland,United kingdom
+Switzerland,Australia
+South korea,South africa
+South korea,Argentina
+South korea,Switzerland
+South korea,Turkey
+South korea,Nepal
+South korea,Greece
+South korea,Germany
+South korea,Mexico
+South korea,Egypt
+South korea,Thailand
+South korea,Qatar
+South korea,Japan
+South korea,Iran
+South korea,New zealand
+South korea,Denmark
+South korea,Italy
+South korea,Spain
+South korea,Canada
+South korea,Uruguay
+Spain,Chile
+Spain,Sweden
+Spain,United states
+Spain,Iran
+Spain,Argentina
+Spain,Colombia
+Spain,Netherlands
+Spain,United arab emirates
+Spain,South korea
+Spain,Libya
+Spain,Portugal
+Spain,Greece
+Spain,Qatar
+Spain,Austria
+Spain,Kenya
+Spain,Uruguay
+Spain,Brazil
+Spain,Switzerland
+Spain,China
+South africa,Mexico
+South africa,India
+South africa,Thailand
+South africa,Australia
+South africa,Japan
+South africa,Kenya
+South africa,Norway
+South africa,Croatia
+South africa,Austria
+South africa,South korea
+South africa,Brazil
+South africa,Egypt
+South africa,Turkey
+South africa,Costa rica
+South africa,Israel
+South africa,France
+South africa,Iran
+South africa,China
+South africa,Greece
+South africa,United kingdom
+South africa,Sweden
+South africa,Argentina
+Sweden,Australia
+Sweden,India
+Sweden,Egypt
+Sweden,Saudi arabia
+Sweden,Chile
+Sweden,Denmark
+Sweden,Colombia
+Sweden,Argentina
+Sweden,United states
+Sweden,Libya
+Sweden,Iran
+Sweden,Croatia
+Sweden,Portugal
+Sweden,Greece
+Sweden,Nepal
+Sweden,New zealand
+Sweden,China
+Sweden,Brazil
+Turkey,France
+Turkey,Costa rica
+Turkey,Libya
+Turkey,New zealand
+Turkey,Chile
+Turkey,Saudi arabia
+Turkey,Australia
+Turkey,South africa
+Turkey,Switzerland
+Turkey,Brazil
+Turkey,Netherlands
+Turkey,Thailand
+Turkey,Sweden
+Turkey,Mexico
+Turkey,United states
+Turkey,Portugal
+Turkey,Canada
+Turkey,Spain
+Turkey,Croatia
+Thailand,Kenya
+Thailand,South africa
+Thailand,Nepal
+Thailand,United states
+Thailand,United arab emirates
+Thailand,Argentina
+Thailand,Egypt
+Thailand,Turkey
+Thailand,India
+Thailand,Australia
+Thailand,Brazil
+Thailand,Hong kong
+Thailand,New zealand
+Thailand,Japan
+Thailand,Russia
+Thailand,Iran
+Thailand,Libya
+Thailand,Italy
+Thailand,Qatar
+Uruguay,New zealand
+Uruguay,Brazil
+Uruguay,Iran
+Uruguay,Croatia
+Uruguay,Portugal
+Uruguay,Russia
+Uruguay,Spain
+Uruguay,Norway
+Uruguay,Mexico
+Uruguay,Kenya
+Uruguay,Saudi arabia
+Uruguay,United states
+Uruguay,South africa
+Uruguay,Turkey
+Uruguay,Netherlands
+Uruguay,Switzerland
+Uruguay,Australia
+Uruguay,United kingdom
+United kingdom,Norway
+United kingdom,Spain
+United kingdom,Austria
+United kingdom,Japan
+United kingdom,Uruguay
+United kingdom,South africa
+United kingdom,Qatar
+United kingdom,India
+United kingdom,Italy
+United kingdom,Russia
+United kingdom,Canada
+United kingdom,Germany
+United kingdom,Australia
+United kingdom,Israel
+United kingdom,Nepal
+United states,Hong kong
+United states,Russia
+United states,Italy
+United states,India
+United states,Thailand
+United states,Argentina
+United states,South korea
+United states,Nepal
+United states,Costa rica
+United states,Israel
+United states,Kenya
+United states,Norway
+United states,United kingdom
+United states,Portugal
+United states,Uruguay
+United states,United arab emirates
+United states,Saudi arabia
+United arab emirates,South africa
+United arab emirates,United states
+United arab emirates,Colombia
+United arab emirates,Sweden
+United arab emirates,Kenya
+United arab emirates,Turkey
+United arab emirates,Greece
+United arab emirates,Spain
+United arab emirates,Egypt
+United arab emirates,Italy
+United arab emirates,Australia
+United arab emirates,Costa rica
+United arab emirates,Japan
+United arab emirates,Israel
+United arab emirates,Chile
+United arab emirates,India
+United arab emirates,Portugal
+United arab emirates,Russia
+United arab emirates,Qatar
+United arab emirates,Croatia
