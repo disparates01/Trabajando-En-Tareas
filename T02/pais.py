@@ -1,5 +1,6 @@
 class Pais:
-	def __init__(self, name, poblacion, infectados = 0, muertos = 0, fecha_infeccion = None, aeropuerto = True, frontera = True, mascarillas = False, fecha_cura = None):
+	def __init__(self, name, poblacion, infectados = 0, muertos = 0, fecha_infeccion = None, aeropuerto = True,
+				 frontera = True, mascarillas = False, fecha_cura = None):
 		self.name = name
 		self.poblacion = poblacion
 		self.infectados = infectados
@@ -9,6 +10,7 @@ class Pais:
 		self.frontera = frontera
 		self.mascarillas = mascarillas
 		self.fecha_cura = fecha_cura
+		self.estado = 'limpio'
 
 	def avanzar_infeccion(self, infeccion):
 		nuevos_infectados = sum([random.randint(0,6) for persona in range(1,100)])*infeccion.contagiosidad
@@ -60,7 +62,7 @@ class Pais:
 		self.fecha_infeccion = today
 		return self.fecha_infeccion
 
-	def days_infected(self, today):
+	def days_infected(self, today): #cambiar nombre a dias_infeccion
 		return today - self.fecha_infeccion
 	
 	def conecciones(self, grafo_terrestre, grafo_aereo, pais2):
@@ -88,3 +90,25 @@ class Pais:
 	def vecinos(self, lista_paises, grafo):
 		nombres_vecinos = grafo[self.name]
 		return [pais for pais in lista_paises if pais.name in nombres_vecinos]
+
+	def anadir_propuestas(self):
+		propuestas = []
+		return propuestas
+
+	def abrir_aeropuerto(self):
+		pass
+
+	def cerrar_aeropuerto(self):
+		pass
+
+	def abrir_frontera(self):
+		pass
+
+	def cerrar_frontera(self):
+		pass
+
+	def repartir_mascarillas(self):
+		pass
+
+	def generar_estadisticas(self):
+		return estadisticas
