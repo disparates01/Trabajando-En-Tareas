@@ -9,6 +9,9 @@ de la programacion para dejar mas tiempo a las partes entrenenidas
 
 #-----------------------------------------------------------------------------------------------------------------------
 
+#Idea:
+#Hacer que el super input no retorne solo un str, sino que el tipo que se pidió.-
+
 class SuperInput:
     #Agregar tipo contraseña (solo alfanumerica)
 
@@ -157,7 +160,7 @@ class SuperInput:
 
 
 
-    def superinput(self):
+    def __call__(self):
         stop = False
         while not stop:
             self.solicitar_entrada()
@@ -171,22 +174,21 @@ class SuperInput:
 
 #-----------------------------------------------------------------------------------------------------------------------
 
+class Error:
+    pass
+
 class Menu():
-    lista_opciones = []
-    lista_funciones = None
-    texto_inicio = None
-    texto_error = None
+    '''def __init__(self, lista_opciones, lista_funciones = None, texto_inicio = None, texto_error = None):
+        self.lista_opciones = lista_opciones
+        self.lista_funciones = lista_funciones
+        self.texto_inicio = texto_inicio
+        self.texto_error = texto_error'''
 
-    def __init__(self):
-        pass
-
-    def seleccion_opcion(self):
-        pass
-
-    def mostrar(self):
-        pass
-
-    def menu(lista_opciones, lista_funciones = None, texto_inicio = None, texto_error = None):
+    def __call__(self, lista_opciones, lista_funciones = None, texto_inicio = None, texto_error = None):
+        self.lista_opciones = lista_opciones
+        self.lista_funciones = lista_funciones
+        self.texto_inicio = texto_inicio
+        self.texto_error = texto_error
         '''
         Recibe una lista de opciones que el programa enumera y presenta al usuario.
         Si se le entrega una lista de funciones, estas seran asociadas en el orden entregado a la lista de opciones,
@@ -196,6 +198,47 @@ class Menu():
         opciones disponibles. El programa vuelve a solicitar la información correcta cada vez que el usuario ingresa una
         opcion invalida
         '''
+        diccionario = {}
+        stop = False
+        while not stop:
+            #Revisa que los argumentos enregados sean realmente listas:
+            if isinstance(self.lista_opciones, list):
+                if isinstance(self.lista_funciones, list):
+                    #Revisa que ambas listas tengan el mismo largo:
+                    if len(self.lista_funciones) == len(self.lista_opciones):
+                        #Crea un diccionario con un numero y la funcion asociada:
+                        contador = 0
+                        for funcion in self.lista_funciones:
+                            contador += 1
+                            diccionario[contador] = funcion
+                        #Despliga en pantalla las opciones diponibles:
+                        contador = 0
+                        if self.texto_inicio:
+                            if type(self.texto_inicio) == str:
+                                print(self.texto_inicio + '\n')
+                            else:
+                                raise TypeError('El texto de inicio debe ser un "string" no "{}"'.format(type(self.texto_inicio)))
+                        for opcion in self.lista_opciones:
+                            contador += 1
+                            print('{}) {}'.format(contador, opcion))
+                        #Solicita la opcion que el usuario desea seleccionar y ejecuta la funcion:
+                        entrada = int(SuperInput('>>> Elige una opcion: ', 'int').__call__())
+                        if (entrada > 0) and (entrada <= contador):
+                            stop = True
+                            diccionario[entrada]()
+                        else:
+                            if self.texto_error:
+                                if type(self.texto_error) == str:
+                                    print(self.texto_error + '\n')
+                                else:
+                                    raise TypeError('El texto de error debe ser un "string"no "{}"'.format(type(self.texto_inicio)))
+                    else:
+                        raise IndexError('Ambas listas deben tener el mismo largo.')
+                else:
+                    raise TypeError('Se entrega "{}" cuando se pide una "list"'.format(type(self.lista_funciones)))
+            else:
+                raise TypeError('Se entrega "{}" cuando se pide una "list"'.format(type(self.lista_opciones)))
+
 
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -295,3 +338,17 @@ def ordenar():
     evaluar que permita poner distinto largo a cada columna)
     no retorna un string con los datos de la matriz o lista de forma ordenada, listos para imprimir en pantalla
     '''
+
+if __name__ == '__main__':
+
+    def hola():
+        print('hola')
+
+    def chao():
+        print('chao')
+
+    lista1 = ['Imprimir Hola', 'Imprimir Chao']
+    lista2 = [hola, chao]
+
+    m = Menu()
+    m(lista1, lista2)

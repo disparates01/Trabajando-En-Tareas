@@ -43,14 +43,14 @@ class Ano:
         self.meses = []
         self.total_dias = 0
 
-		if self.numero % 400 == 0:
-			self.tipo == 'bisiesto'
-		elif self.numero % 100 == 0:
-			self.tipo == 'comun'
-		elif self.numero % 4 == 0:
-			self.tipo = 'bisiesto'
-		else:
-			self.tipo == 'comun'
+        if (self.numero % 400) == 0:
+            self.tipo == 'bisiesto'
+        elif self.numero % 100 == 0:
+            self.tipo == 'comun'
+        elif self.numero % 4 == 0:
+            self.tipo = 'bisiesto'
+        else:
+            self.tipo == 'comun'
 
         meses = [1,2,3,4,5,6,7,8,9,10,11,12]
 
