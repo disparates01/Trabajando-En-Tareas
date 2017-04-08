@@ -1,51 +1,104 @@
 __author__ = 'Ricardo Del Rio'
 
+# ----------------------------------- Imports ----------------------------
+
 from manejo_csv import importar_datos
 from pais import Pais
 from simplificadores import Menu
+from os import path
+from connections_generator import generate_connections
+from estructuras_propias import ListaLigada, Diccionario
+from mundo import Mundo
+
+# ----------------------------------- Definicion de clases ------------
 
 
-def cargar_datos():
-    #Crea objetos de la clase Pais con cada linea del archivo "populatio.csv" y los almacena en una lista.
-    global paises = []
-    for datos_pais in importar_datos('population.csv'):
-        if datos_pais[0] == 'Pais':
-            pass
+class Juego:
+    def __init__(self):
+        self.dia_actual = 0
+        self.salir = False
+        self.mundo = Mundo()
+
+    def comenzar(self):
+        '''
+        Si hay una partida guardada pregunta al usuario si abirla o crear una nueva.
+        Si no hay una partida guardada le avisa al usuario y comienza una nueva partida.
+        '''
+        if path.isfile('partida_guardada.csv'):
+            lista1 = ['Comenzar Nueva Partida', 'Comenzar Partida Guardada']
+            lista2 = [self.partida_nueva, self.partida_guardada]
+            Menu(lista1, lista2)
         else:
-            nuevo_pais = Pais(*datos_pais)
-            paises.append(nuevo_pais)
+            print('No hay partidas guardadas. \nSe ha iniciado una nueva partida.\n')
+            self.partida_nueva()
 
-    #Crea un grafo de listas de listas de adyacencia con las conexiones terrestres
-    global grafo_terrestre = {}
-    for datos_fronteras_terrestres in importar_datos('borders.csv'):
-        if datos_fronteras_terrestres[0] == 'Pais 1':
-            pass
-        else:
-            if grafo_terrestre[datos_fronteras_terrestres[0]] == None:
-                grafo_terrestre[datos_fronteras_terrestres[0]] = [datos_fronteras_terrestres[1]]
+    def cargar_conexiones(self):
+        '''
+        Carga las conexiones terrestres y aereas
+        '''
+        self.mundo.establecer_conecciones_terrestres()
+        self.mundo.establecer_conexiones_aereas()
+
+    def partida_nueva(self):
+        '''
+        LLama a la funcion que genera las conexiones aereas.
+        Llama al metodo que carga los datos de las conexiones en los grafos correspondientes
+        Lee el archivo 'population.csv' y crea objetos de la clase Pais con cada linea del archivo.
+        '''
+        generate_connections()
+        self.cargar_conexiones()
+        self.mundo.lista_paises = []  # OJO ESTO ESTA USANDO LISTAS DE PYTHON
+        for datos_pais in importar_datos('population.csv'):
+            if datos_pais[0] == 'Pais':
+                pass
             else:
-                grafo_terrestre[datos_fronteras_terrestres[0]].append(datos_fronteras_terrestres[1])
+                nuevo_pais = Pais(*datos_pais)
+                self.mundo.lista_paises.append(nuevo_pais)
 
-    # Crea un grafo de listas de listas de adyacencia con las conexiones aereas
-    global grafo_aereo = {}
-    for datos_fronteras_aereas in importar_datos('random_airport.csv'):
-        if datos_fronteras_aereas[0] == 'Pais 1':
-            pass
-        else:
-            if grafo_aereo[datos_fronteras_aereas[0]] == None:
-                grafo_aereo[datos_fronteras_aereas[0]] = [datos_fronteras_aereas[1]]
+    def partida_guardada(self):
+        '''
+        Como es una partida ya creada no llama al generador de conexiones aereas.
+        Llama al metodo que carga los datos de las conexiones en los grafos correspondientes
+        Lee el archivo 'partida_guardada.csv' y crea objetos de la clase Pais con cada linea del archivo.
+        '''
+        self.cargar_conexiones()
+        self.mundo.lista_paises = []  # OJO ESTO ESTA USANDO LISTAS DE PYTHON
+        for datos_pais in importar_datos('partida_guardada.csv'):
+            if datos_pais[0] == 'Pais':
+                pass
             else:
-                grafo_aereo[datos_fronteras_aereas[0]].append(datos_fronteras_aereas[1])
+                nuevo_pais = Pais(*datos_pais)
+                self.mundo.lista_paises.append(nuevo_pais)
 
-hay_guardada = True
-try:
-    with open('partida_guardada.csv', 'r') as archivo:
+    def desplegar_menu_principal(self):
+        '''Despliega las opciones diarias que tiene un jugador'''
+        lista1 = ['Pasar el Dia', 'Estadisticas', 'Guardar Estado', 'Salir']
+        lista2 = [self.pasar_dia, self.desplegar_menu_estadisticas, self.guardar_estado, self.terminar]
+        Menu(lista1, lista2)
+
+    def desplegar_menu_estadisticas(self):
+        '''Despliega las opciones que tiene el jugador cuando desea ver las estadisticas'''
+        lista1 = ['Resumen del Dia', 'Por Pais', 'Global', 'Muertes e Infecciones por Dia', 'Promedio Muertes e Infecciones']
+        lista2 = []
+
+
+    def pasar_dia(self):
+        '''Avanza un dia en la linea temporal del programa'''
+        self.dia_actual += 1
+
+    def guardar_estado(self):
+        #nombre, poblacion, infectados, muertos, fecha_infeccion, aeropuerto, frontera, mascarillas, fecha_cura, estado
         pass
-except:
-    hay_guardada = False
 
-if not hay_guardada:
-    lista1 = ['Comenzar Nueva Partida', 'Comenzar Partida Guardada']
-    lista2 = [] #completar esta lista.
-    Menu()(lista1, lista2)
+    def terminar(self):
+        '''Retorna True'''
+        self.salir = True
 
+
+# ----------------------------------- A partir de aqui el codigo ---------
+
+
+j = Juego()
+j.comenzar()
+while not j.salir:
+    j.desplegar_menu_principal()

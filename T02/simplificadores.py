@@ -1,6 +1,6 @@
 __author__ = 'Ricardo Del Rio'
 
-from calendario import Calendario
+#from calendario import Calendario
 
 '''
 Este modulo contiene funciones para facilitar y acelerar aquellas tediosas y repetitivas partes
@@ -13,26 +13,10 @@ de la programacion para dejar mas tiempo a las partes entrenenidas
 #Hacer que el super input no retorne solo un str, sino que el tipo que se pidió.-
 
 class SuperInput:
-    #Agregar tipo contraseña (solo alfanumerica)
-
-    def __new__(self, solicitud_input = '>>> ', tipos = 'str', mensaje_error = None):
-        self.solicitud_input = solicitud_input
-        if type(tipos) == str:
-            self.lista = [tipos]
-        elif type(tipos) == list:
-            self.lista = tipos
-        self.mensaje_error = mensaje_error
-        self.entrada = ''
-
-        stop = False
-        while not stop:
-            self.solicitar_entrada(self)
-            if self.input_correcto():
-                stop = True
-                return self.entrada
-            else:
-                print(self.mensaje_error)
-                print()
+    solicitud_input = ''
+    lista = []
+    mensaje_error = ''
+    entrada = ''
 
     '''def __init__(self, solicitud_input = '>>> ', tipos = 'str', mensaje_error = None):
         self.solicitud_input = solicitud_input
@@ -41,7 +25,9 @@ class SuperInput:
         elif type(tipos) == list:
             self.lista = tipos
         self.mensaje_error = mensaje_error
-        self.entrada = ''  '''
+        self.entrada = '' '''
+
+
 
 
     def solicitar_entrada(self):
@@ -78,23 +64,23 @@ class SuperInput:
         Si lo es, retorna True. Si no, False.
         '''
         v1, v2, v3, v4, v5, v6 = False, False, False, False, False, False
-        for i in self.lista:
-            if self.es_int(i):
+        for tipo in self.lista:
+            if self.es_int(tipo):
                 try:
                     self.entrada = int(self.entrada)
                     v1 = True
                 except:
                     v1 = False
-            elif self.es_float(i):
+            elif self.es_float(tipo):
                 try:
                     self.entrada = float(self.entrada)
                     v2 = True
                 except:
                     v2 = False
-            elif self.es_mail(i):
+            elif self.es_mail(tipo):
                 print('Aún no está creada la opcion mail del superinput')
                 v3 = False
-            elif self.es_str(i):
+            elif self.es_str(tipo):
                 v4 = True
             elif i == 'fecha':
                 v5 = True
@@ -178,7 +164,24 @@ class SuperInput:
 
         return (v1 or v2 or v3 or v4 or v5 or v6)
 
+    def __new__(self, solicitud_input = '>>> ', tipos = 'str', mensaje_error = None):
+        self.solicitud_input = solicitud_input
+        if type(tipos) == str:
+            self.lista = [tipos]
+        elif type(tipos) == list:
+            self.lista = tipos
+        self.mensaje_error = mensaje_error
+        self.entrada = ''
 
+        stop = False
+        while not stop:
+            self.solicitar_entrada()
+            if self.input_correcto():
+                stop = True
+                return self.entrada
+            else:
+                print(self.mensaje_error)
+                print()
 
 
 

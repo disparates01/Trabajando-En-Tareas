@@ -19,6 +19,7 @@ class ListaLigada:
     def __init__(self):
         self.cola = None
         self.cabeza = None
+        # len = 0
 
     def append(self, valor):
         #Revisa si la lista tiene comienzo. Sino se crea un primer nodo.
@@ -30,6 +31,26 @@ class ListaLigada:
         else:
             self.cola.prox = Nodo(valor)
             self.cola = self.cola.prox
+
+    def pop(self, posicion = None):
+        pass
+
+    def __str__(self):
+        pass
+
+    def __len__(self):
+        pass
+
+    def insert(self,posicion, elemento):
+        pass
+
+    def remove(self, elemento):
+        pass
+
+    def index(self):
+        pass
+
+#--------------------------------------------------DICCIONARIO-------------------------------
 
 class Diccionario:
     def __init__(self):
@@ -131,7 +152,7 @@ class Diccionario:
         pass #esta es importante, completar
 
 
-
+#----------------------------------------------------EJECUCION_____________________________
 
 if __name__ == '__main__':
 

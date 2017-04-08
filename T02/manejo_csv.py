@@ -8,7 +8,7 @@ def es_csv(archivo_csv):
     '''
     return archivo_csv[-4:] == '.csv'
 
-def importar_datos(archivo_csv):
+def importar_datos(archivo_csv,simbolo = ','):
     '''
     Recibe como parametro el directorio o el nombre de un archivo ".csv"
     Retorna una lista de listas (matriz) con los datos del arhivo.
@@ -16,7 +16,7 @@ def importar_datos(archivo_csv):
     with open(archivo_csv,'r') as archivo:
         lista_archivo = []
         for linea in archivo:
-            lista_linea = linea.strip('\n').split(',')
+            lista_linea = linea.strip('\n').split(simbolo)
             lista_archivo.append(lista_linea)
     return lista_archivo
 
