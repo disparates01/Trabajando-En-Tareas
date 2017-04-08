@@ -131,7 +131,7 @@ class Mundo:
         self.paises_limpios = ListaLigada(filter(lambda x: x.infectado(), self.lista_paises))
         self.paises_muertos = ListaLigada(filter( lambda x: x.muerto(), self.lista_paises))
 
-        [reduce(lambda x,y: (x.poblacion - x.muertos) + (y.poblacio))]
+        [reduce(lambda x,y: (x.poblacion - x.muertos) + (y.poblacion))]
 
         poblacion_total = sum(map(lambda x: x.poblacion, self.lista_paises ))
         muertos_totales = sum(map(lambda x: x.muertos, self.lista_paises))
@@ -139,16 +139,31 @@ class Mundo:
 
 
 
-        print('Paises limpios:           \n{0}\n'
-              'Paises infectados:        \n{1}\n'
-              'Paises muertos:           \n{2}\n'
-              'Poblacion total viva      \n{3:11}'
-              'Poblacion total nfectada: \n{4:11}'
-              'Poblacion total sana:     \n{5:11}'.format(', '.join(self.paises_limpios),
+        print('Paises limpios:            \n{0}\n'
+              'Paises infectados:         \n{1}\n'
+              'Paises muertos:            \n{2}\n'
+              'Poblacion total viva       \n{3:11}'
+              'Poblacion total infectada: \n{4:11}'
+              'Poblacion total sana:      \n{5:11}'.format(', '.join(self.paises_limpios),
                                                         ', '.join(self.paises_infectados),
                                                         ', '.join(self.paises_muertos),
                                                         vivos_totales,
-                                                          )
+                                                           self.infetados_totales,
+                                                           self.muertos_totales))
+    def muertes_infecciones_dias(self, today):
+        print('Muertes e Infecciones Por Dia:\n')
+        for i in range(today):
+            infecciones_dia = reduce(lambda x,y: x.bitacora[i][0] + y.bitacora[i][0], self.lista_paises)
+            muertes_dia = reduce(lambda x,y: x.bitacora[i][1] + y.bitacora[i][1], self.lista_paises)
+            print('Dia {}: {}infectados {}muertos'.filter(today, infecciones_dia, muertes_dia))
+        print()
+
+    def prom_muertes_infecciones(self , today):
+        infecciones_dia = reduce(lambda x,y: x+y, map(lambda x: x.bitacora[today][0], self.lista_paises))
+        muertes_dia = reduce(lambda x,y: x+y, map(lambda x: x.bitacora[today][1], self.lista_paises))
+
+        muertos/poblacion_total
+
 
 class Propuesta:
     def __init__(self, tipo, pais):

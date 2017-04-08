@@ -1,6 +1,7 @@
 __author__ = 'Ricardo Del Rio'
 
 from random import randint, random
+from estructuras_propias import Diccionario, ListaLigada
 
 
 class Pais:
@@ -26,19 +27,22 @@ class Pais:
         self.mascarillas = mascarillas
         self.fecha_cura = fecha_cura
         self.estado = estado
+        self.bitacora = Diccionario() #key = Numero de día ; valores = lista[infectados, muertos]
 
         self.propuestas_gobierno = []
 
-    def avanzar_infeccion(self, infeccion):
+    def avanzar_infeccion(self, infeccion, today):  ###ESta tiene que antes que avanzar muertes!!!!!
         nuevos_infectados = sum([randint(0, 6) for persona in range(
             1, 100)]) * infeccion.contagiosidad  # ESTO USA UNA LISTA PYTHON
+        self.bitacora[today] = ListaLigada(nuevos_infectados)
         if self.mascarillas:
             nuevos_infectados *= 0.3
         self.infectados += nuevos_infectados
         return self.infectados
 
-    def avanzar_muertes(self):
+    def avanzar_muertes(self, today):
         nuevos_muertos = self.probabilidad_de_muerte * self.infectados
+        self.bitacora[today].append(nuevos_muertos)
         self.muertos += nuevos_muertos
         return self.muertos
 
