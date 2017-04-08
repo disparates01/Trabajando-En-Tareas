@@ -15,7 +15,7 @@ de la programacion para dejar mas tiempo a las partes entrenenidas
 class SuperInput:
     #Agregar tipo contraseña (solo alfanumerica)
 
-    def __init__(self, solicitud_input = '>>> ', tipos = 'str', mensaje_error = None):
+    def __new__(self, solicitud_input = '>>> ', tipos = 'str', mensaje_error = None):
         self.solicitud_input = solicitud_input
         if type(tipos) == str:
             self.lista = [tipos]
@@ -24,8 +24,28 @@ class SuperInput:
         self.mensaje_error = mensaje_error
         self.entrada = ''
 
+        stop = False
+        while not stop:
+            self.solicitar_entrada(self)
+            if self.input_correcto():
+                stop = True
+                return self.entrada
+            else:
+                print(self.mensaje_error)
+                print()
+
+    '''def __init__(self, solicitud_input = '>>> ', tipos = 'str', mensaje_error = None):
+        self.solicitud_input = solicitud_input
+        if type(tipos) == str:
+            self.lista = [tipos]
+        elif type(tipos) == list:
+            self.lista = tipos
+        self.mensaje_error = mensaje_error
+        self.entrada = ''  '''
+
+
     def solicitar_entrada(self):
-        self.entrada = input(self.solicitud_input)
+        self.entrada = input()
 
     def es_str(self, tipo):
         texto = ['str', 'string', 'texto']
@@ -160,16 +180,7 @@ class SuperInput:
 
 
 
-    def __call__(self):
-        stop = False
-        while not stop:
-            self.solicitar_entrada()
-            if self.input_correcto():
-                stop = True
-                return self.entrada
-            else:
-                print(self.mensaje_error)
-                print()
+
 
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -184,7 +195,7 @@ class Menu():
         self.texto_inicio = texto_inicio
         self.texto_error = texto_error'''
 
-    def __call__(self, lista_opciones, lista_funciones = None, texto_inicio = None, texto_error = None):
+    def __new__(self, lista_opciones, lista_funciones = None, texto_inicio = None, texto_error = None):
         self.lista_opciones = lista_opciones
         self.lista_funciones = lista_funciones
         self.texto_inicio = texto_inicio
@@ -222,7 +233,7 @@ class Menu():
                             contador += 1
                             print('{}) {}'.format(contador, opcion))
                         #Solicita la opcion que el usuario desea seleccionar y ejecuta la funcion:
-                        entrada = int(SuperInput('>>> Elige una opcion: ', 'int').__call__())
+                        entrada = int(SuperInput('>>> Elige una opcion: ', 'int'))
                         if (entrada > 0) and (entrada <= contador):
                             stop = True
                             diccionario[entrada]()
@@ -350,5 +361,4 @@ if __name__ == '__main__':
     lista1 = ['Imprimir Hola', 'Imprimir Chao']
     lista2 = [hola, chao]
 
-    m = Menu()
-    m(lista1, lista2)
+    m = Menu(lista1, lista2)
