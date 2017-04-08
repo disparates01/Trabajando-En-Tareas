@@ -2,6 +2,7 @@ __author__ = 'Ricardo Del Rio'
 
 from estructuras_propias import ListaLigada, Diccionario
 from simplificadores import SuperInput
+from functools import reduce
 
 from manejo_csv import importar_datos
 
@@ -20,6 +21,8 @@ class Mundo:
         self.paises_aeropuertos_cerrados = []
         self.paises_fronteras_cerradas = []
         self.paises_con_mascarillas = []
+        self.paises_limpios = []
+        self.paises_muertos = []
 
         #estadisticas
         self.resumen_del_dia = ''
@@ -123,10 +126,34 @@ class Mundo:
         entrada = SuperInput('>>> Ingresa el numero del pais que quieres revisar: ',int)
         diccionario_paises[entrada].mostrar_estadisticas()
 
+    def estad_global(self):
+
+        self.paises_limpios = ListaLigada(filter(lambda x: x.infectado(), self.lista_paises))
+        self.paises_muertos = ListaLigada(filter( lambda x: x.muerto(), self.lista_paises))
+
+        [reduce(lambda x,y: (x.poblacion - x.muertos) + (y.poblacio))]
+
+        poblacion_total = sum(map(lambda x: x.poblacion, self.lista_paises ))
+        muertos_totales = sum(map(lambda x: x.muertos, self.lista_paises))
+        vivos_totales = poblacion_total - muertos_totales
+
+
+
+        print('Paises limpios:           \n{0}\n'
+              'Paises infectados:        \n{1}\n'
+              'Paises muertos:           \n{2}\n'
+              'Poblacion total viva      \n{3:11}'
+              'Poblacion total nfectada: \n{4:11}'
+              'Poblacion total sana:     \n{5:11}'.format(', '.join(self.paises_limpios),
+                                                        ', '.join(self.paises_infectados),
+                                                        ', '.join(self.paises_muertos),
+                                                        vivos_totales,
+                                                          )
+
 class Propuesta:
     def __init__(self, tipo, pais):
         self.tipo = tipo
-        self.pais = pais #objeto pais
+        self.pais = pais #nombre pais
         self.prioridad = 0 #float
 
     def calcular_prioridad(self):

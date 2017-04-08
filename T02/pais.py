@@ -77,6 +77,9 @@ class Pais:
     def curado(self):
         return bool(self.fecha_cura)
 
+    def muerto(self):
+        return self.muertos == self.poblacion
+
     def infectado(self):
         return bool(self.fecha_infeccion)
 
