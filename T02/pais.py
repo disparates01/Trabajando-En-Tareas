@@ -27,6 +27,8 @@ class Pais:
         self.fecha_cura = fecha_cura
         self.estado = estado
 
+        self.propuestas_gobierno = []
+
     def avanzar_infeccion(self, infeccion):
         nuevos_infectados = sum([randint(0, 6) for persona in range(
             1, 100)]) * infeccion.contagiosidad  # ESTO USA UNA LISTA PYTHON
@@ -91,10 +93,10 @@ class Pais:
 
     def conecciones(self, grafo_terrestre, grafo_aereo, pais2):
         conecciones = 0
-        if pais2 in vecinos(grafo_terrestre):
+        if pais2 in self.vecinos(grafo_terrestre):
             if self.frontera and pais2.frontera:
                 conecciones += 1
-        if pais2 in vecinos(grafo_aereo):
+        if pais2 in self.vecinos(grafo_aereo):
             if self.aeropuerto and pais2.aeropuerto:
                 conecciones += 1
         return conecciones
@@ -121,6 +123,21 @@ class Pais:
     def anadir_propuestas(self):
         propuestas = []
         return propuestas
+
+    def mostrar_estadisticas(self):
+        #Al probar el programa ver cuanto espacio usan mas o menos los numeros,
+        #Para verificar la alineacion a la derecha
+        print('PAIS: {0}\n'
+              'Estadistcas:\n'
+              '\tPersonas vivas:      {1:11}\n'
+              '\tPersonas infectadas: {2:11}\n'
+              '\tPersonas muertas:    {3:11}\n\n'
+              'Propuestas del Gobierno:\n'
+              '\t{}'.format(self.nombre,
+                            self.poblacion - self.muertos,
+                            self.infectados,
+                            self.muertos,
+                            '\n'.join(self.propuestas_gobierno.sort())))
 
     def abrir_aeropuerto(self):
         pass
