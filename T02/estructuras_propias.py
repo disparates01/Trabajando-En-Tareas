@@ -34,15 +34,25 @@ class _IteradorListaLigada:
 class ListaLigada:
     '''Modela una Lista Ligada compuesta or nodos'''
     #Evaluar el cnvertirla en una Lista Doblemente Ligada
-    def __init__(self):
+    def __init__(self, *args):
         #Primer elemento:
         self.cabeza = None
         self.cola = None
         #len es cero cuando la lista esta vacia
         self.len = 0
+        #Si se entregan elementos para añadir a la lista:
+        if args:
+            for elemento in args:
+                self.append(elemento)
 
-    '''def __new__(cls, *args, **kwargs):
-        pass'''
+    def __call__(self, *args):
+        # Si se entregan elementos para añadir a la lista:
+        if args:
+            for elemento in args:
+                self.append(elemento)
+        #Si no:
+        else:
+            raise ValueError('No se ingresaron elementos para anadir a la lista.')
 
     def append(self, elemento):
         '''Agrega un elemento a la lista'''
@@ -99,7 +109,7 @@ class ListaLigada:
         return self.len
 
     def insert(self,pos, elem):
-        '''nserta el elemento 'elem' en la poscicion 'pos'
+        '''Inserta el elemento 'elem' en la poscicion 'pos'
         Si la posicion no es valida, levanta un IndexError
         '''
         #Se revisa que la posicion sea valida
@@ -152,16 +162,39 @@ class ListaLigada:
         '''Devuelve el iterador de la lista'''
         return _IteradorListaLigada(self.cabeza)
 
-    def index(self):
-        pass
+    def index(self, elem):
+        '''
+        Recibe un elemento. Si este se encuentra en la lista, retorna la posicion.
+        Si el elemento no existe levanta un ValueError
+        '''
+        # Si la lista esta vacia:
+        if self.len == 0:
+            raise ValueError('Lista vacia')
+        n_actual = self.cabeza
+        # Busca el elemento:
+        for i in range(self.len + 1):
+            # Si encuentra el elemento retorna su ubicacion:
+            if n_actual.dato == elem:
+                return i
+            #avanza al nodo siguiente:
+            n_actual = n_actual.prox
+        raise ValueError('El elemento no se encuentra en la lista')
+
+    def clear(self):
+        self.cabeza = None
+        self.cola = None
+
 
     def __add__(self, other):
         for i in other:
             self.append(i)
 
-    def __getitem__(self, item):
-        for i in range(1,self.len):
-
+    def __getitem__(self, pos):
+        n_actual = self.cabeza
+        for i in range(self.len + 1):
+            if i == pos:
+                return n_actual.dato
+            n_actual = n_actual.prox
 
     def __contains__(self, item):
         pass
@@ -298,8 +331,20 @@ if __name__ == '__main__':
     lista.append(2)
     lista.append(3)
     lista.append(4)
-    for i in lista:
-        print(i)
+    lista.append(5)
+    for i in lista: print(i)
+    print('---')
+    lista.clear()
+    for i in lista: print(i)
+    print('---')
+    lista2 = ListaLigada(1,2,3,4,5)
+    for i in lista2: print(i)
+    print('---')
+    lista(1,2,3,4,5)
+    for i in lista: print(i)
+    print('---')
+
+
 
 
     '''''#Prueba de diccionario

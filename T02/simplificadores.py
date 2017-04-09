@@ -1,6 +1,7 @@
 __author__ = 'Ricardo Del Rio'
 
 #from calendario import Calendario
+from estructuras_propias
 
 '''
 Este modulo contiene funciones para facilitar y acelerar aquellas tediosas y repetitivas partes
@@ -18,14 +19,14 @@ class SuperInput:
     mensaje_error = ''
     entrada = ''
 
-    '''def __init__(self, solicitud_input = '>>> ', tipos = 'str', mensaje_error = None):
+    def __init__(self, solicitud_input = '>>> ', tipos = 'str', mensaje_error = None):
         self.solicitud_input = solicitud_input
         if type(tipos) == str:
             self.lista = [tipos]
         elif type(tipos) == list:
             self.lista = tipos
         self.mensaje_error = mensaje_error
-        self.entrada = '' '''
+        self.entrada = ''
 
 
 
