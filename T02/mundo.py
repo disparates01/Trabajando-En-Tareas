@@ -14,6 +14,7 @@ class Mundo:
 
         self.infectados_totales = 0
         self.muertos_totales = 0
+        self.infectados_totales = 0
 
         #litas
         self.lista_paises = []
