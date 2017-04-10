@@ -1,5 +1,5 @@
 __author__ = 'Ricardo Del Rio'
-#Libre de estructuras python
+# Libre de estructuras python
 
 from random import randint, random
 from estructuras_propias import Diccionario, ListaLigada
@@ -16,8 +16,7 @@ class Pais:
             aeropuerto=True,
             frontera=True,
             mascarillas=False,
-            fecha_cura=None,
-            estado='limpio'):
+            fecha_cura=None):
         self.nombre = nombre
         self.poblacion = poblacion
         self.infectados = infectados
@@ -27,50 +26,53 @@ class Pais:
         self.frontera = frontera
         self.mascarillas = mascarillas
         self.fecha_cura = fecha_cura
-        self.estado = estado
-        self.bitacora = Diccionario() #key = Numero de día ; valores = lista[infectados, muertos]
+        # key = Numero de día ; valores = lista[infectados, muertos]
+        self.bitacora = Diccionario()
 
-        self.propuestas_gobierno = []
+        self.propuestas_gobierno = ListaLigada()
 
-    def avanzar_infeccion(self, infeccion, today):  ###ESta tiene que antes que avanzar muertes!!!!!
-        nuevos_infectados = sum([randint(0, 6) for persona in range(
-            1, 100)]) * infeccion.contagiosidad  # ESTO USA UNA LISTA PYTHON
-        self.bitacora[today] = ListaLigada(nuevos_infectados)
+    # ESta tiene que ir antes que avanzar muertes!!!!!
+    def avanzar_infeccion(self, infeccion, hoy):
+        nuevos_infectados = sum(ListaLigada(*[randint(0, 6) for persona in range(
+            1, 100)])) * infeccion.contagiosidad
+        self.bitacora[hoy] = ListaLigada(nuevos_infectados)
         if self.mascarillas:
             nuevos_infectados *= 0.3
         self.infectados += nuevos_infectados
         return self.infectados
 
-    def avanzar_muertes(self, today):
+    def avanzar_muertes(self, hoy):
         nuevos_muertos = self.probabilidad_de_muerte * self.infectados
-        self.bitacora[today].append(nuevos_muertos)
+        self.bitacora[hoy].append(nuevos_muertos)
         self.muertos += nuevos_muertos
         return self.muertos
 
-    def avanzar_contagio(self, today):
+    def avanzar_contagio(self, hoy, mundo):
+        m = mundo
         if not self.infectado():
             return
         else:
-            for pais in set(  # ESTO USA UN CONJUNTO PYTHON
+            for pais in (
                 self.vecinos(
-                    lista_paises,
-                    grafo_terrestre) +
+                    m.lista_paises,
+                    m.grafo_terrestre) +
                 self.vecinos(
-                    lista_paises,
-                    grafo_aereo)):
+                    m.lista_paises,
+                    m.grafo_aereo)).elementos_unicos():
                 min((0.07 * self.infectados) / (self.poblacion *
-                                                self.conecciones(grafo_terrestre, grafo_aereo, pais)), 1)
-        if random() > min((0.07 * self.infectados) / (self.poblacion *
-                                                             self.conecciones(grafo_terrestre, grafo_aereo, pais)), 1):
-            pais.infectar(today)
+                                                self.conecciones(m.grafo_terrestre, m.grafo_aereo, pais)), 1)
+        if random() > min((0.07 * self.infectados) / (self.poblacion * \
+                  self.conecciones(m.grafo_terrestre, m.grafo_aereo, pais)), 1):
+            pais.infectar(hoy)
 
-    def avanzar_cura(self, today):
+    def avanzar_cura(self, hoy, mundo):
+        m = mundo
         if not self.curado:
             return
         else:
             paises_curados = []
-            for pais in self.vecinos(lista_paises, grafo_aereo):
-                pais.curar(today)
+            for pais in self.vecinos(m.lista_paises, m.grafo_aereo):
+                pais.curar(hoy)
                 paises_curados.append(pais)
         return paises_curados
 
@@ -88,16 +90,16 @@ class Pais:
     def infectado(self):
         return bool(self.fecha_infeccion)
 
-    def curar(self, today):
-        self.fecha_cura = today
+    def curar(self, hoy):
+        self.fecha_cura = hoy
         return self.fecha_cura
 
-    def infectar(self, today):
-        self.fecha_infeccion = today
+    def infectar(self, hoy):
+        self.fecha_infeccion = hoy
         return self.fecha_infeccion
 
-    def days_infected(self, today):  # cambiar nombre a dias_infeccion
-        return today - self.fecha_infeccion
+    def dias_infeccion(self, hoy):
+        return hoy - self.fecha_infeccion
 
     def conecciones(self, grafo_terrestre, grafo_aereo, pais2):
         conecciones = 0
@@ -116,7 +118,8 @@ class Pais:
                    infection.tasa_mortalidad, 1)
 
     def probabilidad_de_contagio(self):
-        return min((0.07 * self.infectados / (self.poblacion * self.conecciones)), 1)
+        return min((0.07 * self.infectados /
+                    (self.poblacion * self.conecciones)), 1)
 
     def sanos(self):
         return self.poblacion - self.infectados
@@ -126,15 +129,19 @@ class Pais:
 
     def vecinos(self, lista_paises, grafo):
         nombres_vecinos = grafo[self.nombre]
-        return [pais for pais in lista_paises if pais.nombre in nombres_vecinos]  ###LISTA PYTHON!!!!
+        lista = ListaLigada()
+        for pais in lista_paises:
+            if pais.nombre in nombres_vecinos:
+                lista.append(pais)
+        return lista
 
     def anadir_propuestas(self):
         propuestas = []
         return propuestas
 
     def mostrar_estadisticas(self):
-        #Al probar el programa ver cuanto espacio usan mas o menos los numeros,
-        #Para verificar la alineacion a la derecha
+        # Al probar el programa ver cuanto espacio usan mas o menos los numeros,
+        # Para verificar la alineacion a la derecha
         print('PAIS: {0}\n'
               'Estadistcas:\n'
               '\tPersonas vivas:      {1:11}\n'
@@ -163,4 +170,4 @@ class Pais:
         pass
 
     def generar_estadisticas(self):
-        return estadisticas
+        pass

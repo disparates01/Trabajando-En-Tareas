@@ -1,5 +1,5 @@
 __author__ = 'Ricardo Del Rio'
-#Libre de estructuras python
+# Libre de estructuras python
 
 # ----------------------------------- Imports ----------------------------
 
@@ -8,7 +8,7 @@ from pais import Pais
 from simplificadores import Menu
 from os import path
 from connections_generator import generate_connections
-from estructuras_propias import ListaLigada, Diccionario
+from estructuras_propias import ListaLigada
 from mundo import Mundo
 
 # ----------------------------------- Definicion de clases ------------
@@ -26,7 +26,9 @@ class Juego:
         Si no hay una partida guardada le avisa al usuario y comienza una nueva partida.
         '''
         if path.isfile('partida_guardada.csv'):
-            lista1 = ListaLigada('Comenzar Nueva Partida', 'Comenzar Partida Guardada')
+            lista1 = ListaLigada(
+                'Comenzar Nueva Partida',
+                'Comenzar Partida Guardada')
             lista2 = ListaLigada(self.partida_nueva, self.partida_guardada)
             Menu(lista1, lista2).menu()
         else:
@@ -73,15 +75,33 @@ class Juego:
 
     def desplegar_menu_principal(self):
         '''Despliega las opciones diarias que tiene un jugador'''
-        lista1 = ListaLigada('Pasar el Dia', 'Estadisticas', 'Guardar Estado', 'Salir')
-        lista2 = ListaLigada(self.pasar_dia, self.desplegar_menu_estadisticas, self.guardar_estado, self.terminar)
+        lista1 = ListaLigada(
+            'Pasar el Dia',
+            'Estadisticas',
+            'Guardar Estado',
+            'Salir')
+        lista2 = ListaLigada(
+            self.pasar_dia,
+            self.desplegar_menu_estadisticas,
+            self.guardar_estado,
+            self.terminar)
         Menu(lista1, lista2).menu()
 
     def desplegar_menu_estadisticas(self):
         '''Despliega las opciones que tiene el jugador cuando desea ver las estadisticas'''
-        lista1 = ListaLigada('Resumen del Dia', 'Por Pais', 'Global', 'Muertes e Infecciones por Dia', 'Promedio Muertes e Infecciones')
+        lista1 = ListaLigada(
+            'Resumen del Dia',
+            'Por Pais',
+            'Global',
+            'Muertes e Infecciones por Dia',
+            'Promedio Muertes e Infecciones')
         m = self.mundo
-        lista2 = ListaLigada(m.mostrar_resumen_diario(), m.mostrar_estad_por_pais(), m.estad_global(), m.muertes_infecciones_dias(), m.prom_muertes_infecciones())
+        lista2 = ListaLigada(
+            m.mostrar_resumen_diario(),
+            m.mostrar_estad_por_pais(),
+            m.estad_global(),
+            m.muertes_infecciones_dias(),
+            m.prom_muertes_infecciones())
         Menu(lista1, lista2).menu()
 
     def pasar_dia(self):
