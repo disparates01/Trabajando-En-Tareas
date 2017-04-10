@@ -3,12 +3,11 @@ __author__ = 'Ricardo Del Rio'
 from estructuras_propias import ListaLigada, Diccionario
 from simplificadores import SuperInput
 from functools import reduce
-
 from manejo_csv import importar_datos
 
 class Mundo:
     def __init__(self):
-        self.propuestas = []
+        self.propuestas = ListaLigada()
         self.grafo_terrestre = None
         self.grafo_aereo = None
 
@@ -17,13 +16,13 @@ class Mundo:
         self.infectados_totales = 0
 
         #litas
-        self.lista_paises = []
-        self.paises_infectados = []
-        self.paises_aeropuertos_cerrados = []
-        self.paises_fronteras_cerradas = []
-        self.paises_con_mascarillas = []
-        self.paises_limpios = []
-        self.paises_muertos = []
+        self.lista_paises = ListaLigada()
+        self.paises_infectados = ListaLigada()
+        self.paises_aeropuertos_cerrados = ListaLigada()
+        self.paises_fronteras_cerradas = ListaLigada()
+        self.paises_con_mascarillas = ListaLigada()
+        self.paises_limpios = ListaLigada()
+        self.paises_muertos = ListaLigada()
 
         #estadisticas
         self.resumen_del_dia = ''

@@ -192,13 +192,16 @@ class ListaLigada:
             self.append(i)
 
     def __getitem__(self, pos):
-        if (pos < 0) or (pos >= self.len):
-            raise IndexError('La lista no tiene un elemento en la posicion {} El ultimo elemento esta en la posicion {}'.format(pos,self.len -1 ))
-        n_actual = self.cabeza
-        for i in range(self.len):
-            if i == pos:
-                return n_actual.dato
-            n_actual = n_actual.prox
+        try:
+            pos.islice()
+        except:
+            if (pos < 0) or (pos >= self.len):
+                raise IndexError('La lista no tiene un elemento en la posicion {} El ultimo elemento esta en la posicion {}'.format(pos,self.len -1))
+            n_actual = self.cabeza
+            for i in range(self.len):
+                if i == pos:
+                    return n_actual.dato
+                n_actual = n_actual.prox
 
     def __contains__(self, item):
         n_actual = self.cabeza
@@ -382,6 +385,8 @@ if __name__ == '__main__':
     print(lista[4])
     print(lista[5])
     print(lista[10])
+    print(lista[2:])
+
 
 
     print('\n')

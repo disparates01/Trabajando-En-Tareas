@@ -69,7 +69,7 @@ class SuperInput:
             if self.debe_ser_int(tipo):
                 v1 = self.entrada.isnumeric()
             elif self.debe_ser_float(tipo):
-                v2 = '.' in num #Esto debe ser mas preciso
+                v2 = '.' in self.entrada #Esto debe ser mas preciso
             elif self.debe_ser_str(tipo):
                 v4 = True
         return (v1 or v2 or v4) #Se quitaron v3, v5, v6
