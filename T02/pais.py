@@ -1,4 +1,5 @@
 __author__ = 'Ricardo Del Rio'
+#Libre de estructuras python
 
 from random import randint, random
 from estructuras_propias import Diccionario, ListaLigada

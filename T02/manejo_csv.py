@@ -1,6 +1,8 @@
 __author__ = 'Ricardo Del Rio'
+# ***   VERSION MODIFICADA PARA TAREA 02 DE PRORAMACION AVANZADA   ***
+#Libre de estructuras python
 
-from os import getcwd
+from estructuras_propias import ListaLigada, split, join
 
 def es_csv(archivo_csv):
     '''
@@ -14,9 +16,9 @@ def importar_datos(archivo_csv,simbolo = ','):
     Retorna una lista de listas (matriz) con los datos del arhivo.
     '''
     with open(archivo_csv,'r') as archivo:
-        lista_archivo = []
+        lista_archivo = ListaLigada()
         for linea in archivo:
-            lista_linea = linea.strip('\n').split(simbolo)
+            lista_linea = split(linea.strip('\n'), simbolo) #esta funcion retorna una ListaLigada
             lista_archivo.append(lista_linea)
     return lista_archivo
 
@@ -33,24 +35,23 @@ def exportar(matriz, archivo_csv, sobreescribir = False):
 
     with open(archivo_csv,modo) as archivo:
         for f in matriz:
-            linea = f.join(',')
+            linea = join(', ', f)
             archivo.write(linea + '\n')
-
-
 
 #-----------------------------------------------------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    '''
-    matriz = [[1, 2, 3, 4, 5, 6, 7, 8, 9],
-              ['a', 'b', 'c', 'd', 'e', 'f'],
-              ['g', 'h', 'i', 'j', 'k', 'l'],
-              ['m', 'n', 'o', 'p', 'q', 'r'],
-              ['s', 't', 'u', 'v', 'w', 'x']]
+
+    matriz = ListaLigada(ListaLigada(1, 2, 3, 4, 5, 6, 7, 8, 9),
+              ListaLigada('a', 'b', 'c', 'd', 'e', 'f'),
+              ListaLigada('g', 'h', 'i', 'j', 'k', 'l'),
+              ListaLigada('m', 'n', 'o', 'p', 'q', 'r'),
+              ListaLigada('s', 't', 'u', 'v', 'w', 'x'))
     exportar(matriz, 'prueba.csv', 1)
+
+
+
     '''
-
-
-
     lista = importar_datos('population.csv')
     print(lista)
+    '''

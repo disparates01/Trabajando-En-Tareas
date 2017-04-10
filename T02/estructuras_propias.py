@@ -1,6 +1,6 @@
 __author__ = 'Ricardo Del Río'
+#Libre de estructuras Python
 
-from sys import getsizeof
 
 # Algoritmos basado en http://librosweb.es/libro/algoritmos_python/capitulo_16
 # y material del curso Programación Avanzada de la Pontificia Universidad Catolica de Chile del 1er semestre del 2017.
@@ -23,7 +23,7 @@ class _IteradorListaLigada:
         '''Devuelve uno a uno los elementos'''
         if self.actual == None:
             raise StopIteration('No hay mas elementos en la lista')
-        #Guarda e dato:
+        #Guarda eL dato:
         dato = self.actual.dato
         #Avanza en la lista:
         self.actual = self.actual.prox
@@ -44,6 +44,7 @@ class ListaLigada:
         if args:
             for elemento in args:
                 self.append(elemento)
+
 
     def __call__(self, *args):
         # Si se entregan elementos para añadir a la lista:
@@ -183,6 +184,7 @@ class ListaLigada:
     def clear(self):
         self.cabeza = None
         self.cola = None
+        self.len = 0
 
 
     def __add__(self, other):
@@ -190,17 +192,43 @@ class ListaLigada:
             self.append(i)
 
     def __getitem__(self, pos):
+        if (pos < 0) or (pos >= self.len):
+            raise IndexError('La lista no tiene un elemento en la posicion {} El ultimo elemento esta en la posicion {}'.format(pos,self.len -1 ))
         n_actual = self.cabeza
-        for i in range(self.len + 1):
+        for i in range(self.len):
             if i == pos:
                 return n_actual.dato
             n_actual = n_actual.prox
 
     def __contains__(self, item):
-        pass
+        n_actual = self.cabeza
+        for i in self:
+            if item == i:
+                return True
+        return False
 
     def __delitem__(self, key):
         pass
+
+#Funciones para usar con Listas Ligadas:
+
+def split(texto, simbolo = ','):
+    palabra = ''
+    lista_palabras = ListaLigada()
+    for c in texto:
+        if c == simbolo:
+            lista_palabras.append(palabra)
+            palabra = ''
+        else:
+            palabra += c
+    lista_palabras.append(palabra)
+    return lista_palabras
+
+def join(simbolo, lista):
+    texto = ''
+    for palabra in lista:
+        texto += (str(palabra)+simbolo)
+    return texto
 
 #--------------------------------------------------DICCIONARIO-------------------------------
 
@@ -343,16 +371,27 @@ if __name__ == '__main__':
     lista(1,2,3,4,5)
     for i in lista: print(i)
     print('---')
+    print(isinstance(lista, ListaLigada))
+    print('---')
+    print(5 in lista)
+    print('---')
+    print(lista[0])
+    print(lista[1])
+    print(lista[2])
+    print(lista[3])
+    print(lista[4])
+    print(lista[5])
+    print(lista[10])
 
 
+    print('\n')
 
-
-    '''''#Prueba de diccionario
+    #Prueba de diccionario
     print('Prueba de diccionario')
     diccionario = Diccionario()
-    diccionario['hola'] = 'chao'
-    print(diccionario['hola'])
     diccionario['hola'] = 'hola'
+    print(diccionario['hola'])
+    diccionario['hola'] = 'hello'
     print(diccionario['hola'])
     diccionario['hello'] = 'hello'
     print(diccionario['hello'])
@@ -361,9 +400,23 @@ if __name__ == '__main__':
     print(str(diccionario == dict2))
     print(diccionario)
     dict3 = diccionario.copy()
-    print(dict3)'''
+    print(dict3)
 
-    #¿Cómo hacer para poder usar los paréntesis de corchetes?
+    print('\n')
+
+    #Prueba Split:
+    texto = 'manzana,platano,uva,naranja'
+    lista = split(texto)
+    print(*lista)
+    print(lista[1]) #segundo elemento
 
 
+    print('\n')
+
+    #Prueba Join
+    print('prueba join')
+    lista = ListaLigada('perro', 'conejo', 'cacatua')
+    texto = join(', ', lista)
+    print(texto)
+    print(type(texto))
 

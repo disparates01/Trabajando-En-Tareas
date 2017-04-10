@@ -104,7 +104,7 @@ class Mundo:
 
         del lista_tmp
 
-        self.resumen_del_dia = 'El dia de ayer...\n'
+        self.resumen_del_dia = ('El dia de ayer...\n'
                               'Se infectaron: {0} personas.\n'
                               'Murieron: {1} personas.\n'
                               'La infeccion llego a: {2}\n'
@@ -115,8 +115,9 @@ class Mundo:
                                                                            paises_infectados_dia,
                                                                            aeropuertos_cerrados_dia,
                                                                            fronteras_cerradas_dia,
-                                                                           paises_mascarillas_dia)
-
+                                                                           paises_mascarillas_dia))
+    def mostrar_resumen_diario(self):
+        print(self.resumen_del_dia)
 
     def mostrar_estad_por_pais(self):
         conteo = enumerate(self.lista_paises,1)
@@ -163,7 +164,7 @@ class Mundo:
         infecciones_dia = reduce(lambda x,y: x+y, map(lambda x: x.bitacora[today][0], self.lista_paises))
         muertes_dia = reduce(lambda x,y: x+y, map(lambda x: x.bitacora[today][1], self.lista_paises))
 
-        muertos/poblacion_total
+        #muertos/poblacion_total
 
 
 class Propuesta:
