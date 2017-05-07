@@ -2,7 +2,6 @@ from PyQt5 import QtWidgets, QtGui
 import os
 import json
 
-QtWidgets.QLabel()
 
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
