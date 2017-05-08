@@ -1,0 +1,34 @@
+﻿Dado a que primero creé al código del programa usando estructuas python y después las reemplcé por mis estructuras propias, me topé con errores debido a que no había implementado funcionalidades que uno usa naturalmente en las listas python. Varios los pude corregir, pero uno en particular me causó varios dolores de cabeza (y al parecer al ayudante que me corrigió también) y no lo pude arreglar antes de la hora de entrega. Posteriormente me di cuenta que el error se daba por haber implementado el __setitem__ en el diccionario basado en la ListaLigada, pero no en la LIstaLigada. Este se soluciona agregando este fragmento a la clase ListaLigada:
+
+Al momento de reemplazar las estructuras python por mis estructuras propias me topé con un error que me dió varios dolores de cabeza y que no pude corregir antes de la entrega. Posteriormente me di cuenta que el error estaba dado por que olvidé implementar el __setitem__ de la ListaLigada e intentaba usarlo en el codigo. El error se soluciona agregando este fragmento a la clase ListaLigada:
+
+    def __setitem__(self, pos, value):
+        if (pos < 0) or (pos >= self.len):
+            raise IndexError(
+                'La lista no tiene un elemento en la posicion {} El ultimo elemento esta en la posicion {}'.format(
+                    pos, self.len - 1))
+        n_actual = self.cabeza
+        for i in range(self.len):
+            if i == pos:
+                n_actual.dato = value
+            n_actual = n_actual.prox
+
+Les agradecería que pudieran incorporar ese fragmento para poder ver las funcinalidades que no se ejecutaban dado el error.
+
+
+errores:
+
+setitem
+eliminar +1
+
+
+_____________________
+
+Entiendo que habían algunos errores que no permitían la correcta ejecuación del programa. Y recuerdo que hubo funciones que no alzancé a agregar a los menus del programa. Pero de todos modos muchas de esas funciones estaban creadas y les dediqué bastante tiempo y esfuerzo. Por esto les solicito por favor analizar dichas funciones de modo que auqellos items que figuran como no implementados tengan algún puntaje.
+
+A continuación les presento un listado con las funciones que creé y que buscaban satisfacer lo solicitado en varios items de la tarea. En aquellas funciones que lo ameritan dejo un pequeño comentario para que puedan comprender con facilidad y evaluar si dicha función cumple con lo solicitado.
+
+*Descubrimiento Cura - Item 4
+
+
+
