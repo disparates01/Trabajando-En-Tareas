@@ -1,11 +1,13 @@
 __author__ = 'Ricardo Del Río'
 
+#Última modificacion: 5-mayo-2017
+
 from datetime import datetime as dt
 
 def tiempo_ejecucion(funcion):
     def nueva_funcion(*args):
         inicio = dt.now()
-        funcion(*args)
+        retorno_funcion = funcion(*args)
         fin = dt.now()
         tiempo = fin - inicio
         with open('mediciones.txt', 'a', encoding='utf-8') as archivo:
@@ -13,7 +15,7 @@ def tiempo_ejecucion(funcion):
                           '\n Fecha/Hora:          {1}'
                           '\n Tiempo de ejecución: {2}'.format(funcion, inicio, tiempo))
             archivo.write('\n\n')
-        return funcion(*args)
+        return retorno_funcion
     return nueva_funcion
 
 

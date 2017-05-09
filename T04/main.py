@@ -2,10 +2,10 @@ __author__ = 'Rcardo Del Rio'
 
 from integrantes import Alumno, Profesor, Ayudante
 
-def valida(linea):
-    if (linea == '') or ('Nombre:string,Rol:string,Sección:string' in linea):
-        return False
-    return True
+'''
+COMENTARIOS
+Archivos de datos = '.dsap' (Datos Simulacion Avanzacion Programada)
+'''
 
 class Simulacion:
     '''
