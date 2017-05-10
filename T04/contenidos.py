@@ -1,12 +1,14 @@
 __author__ = 'Ricardo Del Rio'
 
-from random import random, randint
+from random import random, randint, uniform
+from os import sep
 
 class Contenido:
     '''
     Cada objeto de esta clase representa uno de los contenidos que se ven en el curso 'Avanzacion Programada'
     '''
     lista_contenidos = []
+    contenido_actual = None
     def __init__(self, numero, nombre, dificultad, rango1, rango2, rango3, rango4):
         self.numero = numero
         self.nombre = nombre
@@ -26,11 +28,11 @@ class Contenido:
         :return float:
         '''
         if horas <= int(self.rango1[-1]):
-            return random() + randint(1,3) # Random nunca da 1, a si que no hay problema
+            return round(uniform(1, 3.9), 2)
         elif horas <= int(self.rango2[-1]):
-            return random() + randint(4,5)
+            return round(uniform(4, 5.9), 2)
         elif horas <= int(self.rango3[-1]):
-            return random() + 6
+            return round(uniform(6, 6.9), 2)
         elif horas >= int(self.rango4[-1]):
             return 7
 
@@ -43,6 +45,10 @@ class Contenido:
                                             self.rango3,
                                             self.rango4)
 
+    def __le__(self, otro):
+        return self.numero <= otro.numero
+
+
 
 # Hacer que esta funcion sea un metodo de la clase, no de la instancia.
 def importar_info_contenidos():
@@ -51,7 +57,7 @@ def importar_info_contenidos():
     Cada linea del archivo 'contenidos.dsap' contiene una materia del curso con su informacion.
     Se crean los onjetos de la clase COntenido.
     '''
-    with open('contenidos.dsap','r',encoding='utf-8') as archivo:
+    with open('info'+sep+'contenidos.dsap','r',encoding='utf-8') as archivo:
         contenidos = (linea.strip().split(',') for linea in archivo)
         for contenido in contenidos:
             if contenido[0][0] != '#':

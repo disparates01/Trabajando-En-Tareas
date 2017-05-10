@@ -1,6 +1,7 @@
 __author__ = 'Rcardo Del Rio'
 
 from integrantes import Alumno, Profesor, Ayudante
+from evento import Evento
 
 '''
 COMENTARIOS
@@ -13,7 +14,7 @@ class Simulacion:
     Lleva la linea temporal de está y ejecuta en orden los eventos correspondientes.
     '''
     def __init__(self):
-        pass
+        lista_eventos = Evento.lista_eventos
 
     def cargar_integrantes(self):
         '''
@@ -21,18 +22,16 @@ class Simulacion:
         el cual es almacenado en una lista de la clase (no de la instancia)
         '''
         with open('integrantes.csv', encoding='utf-8') as archivo:
-            # # Lee la primera linea para no crear un objeto de ella.
-            # archivo.readline()
             # Carga los alumnos
             alumnos = (filter(lambda x: x[1] == 'Alumno' ,(integrante.strip().split(',') for integrante in archivo)))
             for alumno in alumnos:
-                Alumno(alumno[0], alumno[1], alumno[2])
+                Alumno(alumno[0], alumno[2])
             # Vuelve a la posicion inicial
             archivo.seek(0)
             # Carga los profesores
             profesores = (filter(lambda x: x[1] == 'Profesor' ,(integrante.strip().split(',') for integrante in archivo)))
             for profesor in profesores:
-                Profesor(profesor[0], profesor[1], profesor[2])
+                Profesor(profesor[0], profesor[2])
             # Vuelve a la posicion inicial
             archivo.seek(0)
             # Carga los ayudantes
