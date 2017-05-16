@@ -1,6 +1,6 @@
 __author__ = 'Rcardo Del Rio'
 
-from integrantes import Alumno, Profesor, Ayudante
+from integrantes import Alumno, Profesor, AyudanteDocencia, AyudanteTarea, Coordinador
 from evento import Evento
 
 '''
@@ -38,16 +38,28 @@ class Simulacion:
             ayudantes = (filter(lambda x: ((x[1] == 'Coordinación') or (x[1] == 'Docencia') or (x[1] == 'Tareas')),
                                 (integrante.strip().split(',') for integrante in archivo)))
             for ayudante in ayudantes:
-                Ayudante(ayudante[0], ayudante[1], ayudante[2])
+                if ayudante[1] == 'Coordinación':
+                    Coordinador(ayudante[0], ayudante[1], ayudante[2])
+                elif ayudante[1] == 'Docencia':
+                    AyudanteDocencia(ayudante[0], ayudante[1], ayudante[2])
+                elif ayudante[1] == 'Tareas':
+                    AyudanteTarea(ayudante[0], ayudante[1], ayudante[2])
+
+
+    def run(self):
+        while self.lista_eventos:
+            Evento.seleccionar_evento()
+            Evento.ejecutar_evento()
 
 
 if __name__ == '__main__':
     s = Simulacion()
     s.cargar_integrantes()
+    # s.run()
 
-    c_alumnos = len(Alumno.lista_alumnos)
-    c_profesores = len(Profesor.lista_profesores)
-    c_audantes = len(Ayudante.lista_ayudantes)
-    c_TOTAL = c_alumnos + c_profesores + c_audantes
-
-    print('{0:5} alumnos \n{1:5} profesores \n{2:5} ayudantes \n{3:5} TOTAL'.format(c_alumnos, c_profesores, c_audantes, c_TOTAL))
+    # c_alumnos = len(Alumno.lista_alumnos)
+    # c_profesores = len(Profesor.lista_profesores)
+    # c_audantes = len(Ayudante.lista_ayudantes)
+    # c_TOTAL = c_alumnos + c_profesores + c_audantes
+    #
+    # print('{0:5} alumnos \n{1:5} profesores \n{2:5} ayudantes \n{3:5} TOTAL'.format(c_alumnos, c_profesores, c_audantes, c_TOTAL))

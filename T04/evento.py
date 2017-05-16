@@ -11,6 +11,7 @@ class Evento:
         self.tiempo = tiempo
         self.tipo = tipo
         self.__numero = None
+        self.funciones = []
 
     @property
     def numero(self):
@@ -51,6 +52,10 @@ class Evento:
         Evento.lista_eventos.sort()
         Evento.evento_actual = Evento.lista_eventos.pop(0)
         Evento.evento_actual.numero = next(asignar_numero)
+
+    def ejecutar_evento(self):
+        for funcion in Evento.evento_actual.funciones:
+            funcion()
 
 
 def gen_numero():

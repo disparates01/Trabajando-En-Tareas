@@ -1,6 +1,6 @@
 __author__ = 'Ricardo Del Rio'
 
-from random import choice, random, randint, uniform
+from random import choice, random, randint, uniform, triangular
 from contenidos import Contenido
 from evento import Evento
 
@@ -36,13 +36,13 @@ class Alumno(Integrante):
         self.personalidad = '' # revisar: ingresar forma de obtener personalidad
 
         # REHACER TODO ESTO USANDO PROPERTIES
-        # # Parametros que se modifican constantemente:
-        # # Se comienza asignandoles un primer valor que luego sera modificado.
-        self._horas_semana = 0 # Horas que el estudiante dedicara al curso en una semana. Se modifica semana a semana.
+        # Parametros que se modifican constantemente:
+        # Se comienza asignandoles un primer valor que luego sera modificado.
+        self.__horas_estudio = 0 # Horas que el estudiante dedicara al curso en una semana. Se modifica semana a semana.
         self.__confianza = [None,0] # [Valor, ultimo evento que la modifico]
-        # self.manejo_de_contenidos = 0
-        # self.nivel_de_programacion = randint(2,10) #Se calcula semanalmente
-        # self.nota_esperada = 0
+        self.__manejo_de_contenidos = 0
+        self.__nivel_de_programacion = randint(2,10) #Se calcula semanalmente
+        self.__nota_esperada = 0
 
         self.reunion_profesor = False # revisar: No puede visitar al profesor dos semanas seguidas
         self.fiesta = False
@@ -75,6 +75,49 @@ class Alumno(Integrante):
                 self.__confianza[1] = Evento.evento_actual.numero
                 return self.__confianza[0]
 
+        @property
+        def manejo_contenidos(self):
+            return self.__manejo_de_contenidos
+
+        @property
+        def nivel_programacion(self):
+            return self.__nivel_de_programacion
+
+        @property
+        def nota_esperada(self):
+            return self.__nota_esperada
+
+        @property
+        def horas_estudio(self):
+            return self.__horas_estudio
+
+        @property
+        def progreso_act_actual(self):
+            __PEP8 = (0.7*manejo_contenidos) + (0.2*nivel_programacion) + (0.1*confianza)
+            __funcionalidad = (0.3*manejo_contenidos) + (0.7*nivel_programacion) + (0.1*confianza)
+            __contenidos = (0.7*manejo_contenidos) + (0.2*nivel_programacion) + (0.1*confianza)
+            return (0.2*__PEP8) + (0.4*__funcionalidad) + (0.4*__contenidos)
+        
+        @property
+        def progreso_tarea_actual(self):
+            __horas = horas_estudio * 0.7
+            __PEP8 = (0.5*__horas) + (0.2*nivel_programacion)
+            __contenido = (0.7*manejo_contenidos) + (0.1*nivel_programacion) + (0.2*__horas)
+            __funcionalidad = (0.5*manejo_contenidos) + (0.1*nivel_programacion) + (0.4*__horas)
+            return (0.2*__PEP8) + (0.4*__contenido) + (0.4*__funcionalidad)
+
+        @property
+        def progreso_control_actual(self):
+            __contenidos = (0.7*manejo_contenidos) + (0.05*nivel_programacion) + (0.25*confianza)
+            __funcionalidad = (0.3*manejo_contenidos) + (0.2*nivel_programacion) + (0.5*confianza)
+            return (0.7*__contenidos) + (0.3*__funcionalidad)
+
+        @property
+        def progreso_examen(self):
+            # revisar: falta implementar, recordar que el rpogreso es por pregunta.
+            __contenidos = 0
+            __funcionalidad = 0
+            return (0.7*__contenidos) + (0.3*__funcionalidad)
 
     def det_cant_creditos(self):
         '''
@@ -176,6 +219,38 @@ class Alumno(Integrante):
         if n > 1:
             Pn = 1.05*(1 + v + w) * self.nivel_de_programacion # revisar: que se cumpla que es el nivel de programacion anterior despues de hacer cambios
 
+    def duda_catedra(self):
+        '''
+        Este metodo selecciona a uno de los tres ayudantes de la seccion que estan en la catedra.
+        Si el ayudante ya resolvio 200 dudas, seleccionara al siguiente y así hasta haber seleccionado a los 3 o haber
+        resuelto la duda.
+        Si un ayudante resuelve una duda, el manejo de contenidos del estudiante aumenta un 1%
+        :return:
+        '''
+        resuelto = False
+        n = 1
+        while n <= 3 and not resuelto:
+            ayudante = AyudanteDocencia.ayudantes_secciones[self.seccion][n]
+            try:
+                ayudante.resolver_dudas()
+                self.__manejo_de_contenidos *= 1.1  # Aumenta el manejo de contenidos en un 1%
+                resuelto = True
+            except:
+                pass
+            n += 1
+
+    def catedra(self):
+        '''
+        Este metodo define cuantas veces el estudiante pedirá ayuda durante la catedra.
+        Llama a la función que hace que el estudiante resuelva sus dudas la cantidad de veces que se establecen.
+        :return:
+        '''
+        solicitud_de_ayuda = triangular(1,10,3)
+        for i in range (solicitud_de_ayuda):
+            self.duda_catedra()
+
+
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -207,15 +282,126 @@ class Profesor(Integrante):
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-class Ayudante(Integrante):
-    lista_ayudantes = []
+class AyudanteTarea(Integrante):
     '''
-    Esta clase representa a los ayudantes del curso.
+    Esta clase representa a los ayudantes de tareas del curso.
     '''
-    def __init__(self, nombre, rol, seccion=None):
+    ayudantes_tareas = []
+    def __init__(self, nombre, seccion=None):
         Integrante.__init__(self, nombre, seccion)
-        self.rol = rol
-        Ayudante.lista_ayudantes.append(self)
+        AyudanteTarea.ayudantes_tareas.append(self)
+
+
+class AyudanteDocencia(Integrante):
+    '''
+    Esta clase representa a los ayudantes de docencia del curso.
+    '''
+    ayudantes_docencia = []
+    ayudantia = []
+    ayudantes_secciones = {}
+    def __init__(self, nombre, seccion=None):
+        Integrante.__init__(self, nombre, seccion)
+        AyudanteDocencia.ayudantes_docencia.append(self)
+        self.__ayudados = 0
+        self.__dudas_resueltas = 0
+        self.contenidos_destacados = []
+
+    @staticmethod
+    def quien_hara_ayudantia():
+        '''Este metodo selecciona a los ayudantesque haran la ayudantía de la semana'''
+        # Se limpia la lista
+        AyudanteDocencia.ayudantia = []
+        # Se selecciona al primer ayudante
+        AyudanteDocencia.ayudantia.append(choice(AyudanteDocencia.ayudantes_docencia))
+        # Se selecciona al segundo:
+        stop = False
+        while not stop:
+            ayudante = choice(AyudanteDocencia.ayudantes_docencia)
+            if ayudante not in AyudanteDocencia.ayudantia:
+                AyudanteDocencia.ayudantia.append(ayudante)
+                stop = True
+
+    @staticmethod
+    def ayudantes_por_seccion():
+        '''Este metodo selecciona a los ayudantes que iran a cada seccion de la catedra'''
+        seleccionados = []
+        AyudanteDocencia.ayudantes_secciones.clear()
+        AyudanteDocencia.ayudantes_secciones[1] = []
+        AyudanteDocencia.ayudantes_secciones[2] = []
+        AyudanteDocencia.ayudantes_secciones[3] = []
+        while len(seleccionados) < 9:
+            ayudante = choice(AyudanteDocencia.ayudantes_docencia)
+            if not ayudante in seleccionados:
+                seleccionados.append(ayudante)
+        for i in range(3):
+           AyudanteDocencia.ayudantes_secciones[1].append(seleccionados.pop())
+           AyudanteDocencia.ayudantes_secciones[2].append(seleccionados.pop())
+           AyudanteDocencia.ayudantes_secciones[3].append(seleccionados.pop())
+
+    @property
+    def dudas_resueltas(self):
+        '''
+        Esta property representa la cantidad de veces que el ayudante ha resueto dudas.
+        :return:
+        '''
+        return self.__dudas_resueltas
+
+
+    def resolver_dudas(self):
+        '''
+        Se evita que el ayudante resuelva más dudas que el maximo permitido.
+        :return:
+        '''
+        if self.__dudas_resueltas < 200:
+            self.__dudas_resueltas += 1
+        else:
+            raise ValueError('Se han resuelto el máximo de dudas')
+
+    def selec_contenidos_destacados(self):
+        '''
+        Se seleccionan los 3 contenidos que el ayudante domina mejor.
+        :return:
+        '''
+        while len(self.contenidos_destacados) < 3:
+            contenido = choice(Contenido.lista_contenidos)
+            if contenido in self.contenidos_destacados:
+                pass
+            else:
+                self.contenidos_destacados.append(contenido)
+
+
+class Coordinador(Integrante):
+    '''
+    Esta clase representa al ayudante coordinador del curso.
+    '''
+    coordinador = None
+    def __init__(self, nombre, seccion=None):
+        Integrante.__init__(self, nombre, seccion)
+        self.c_descuentos = 0
+        self.fecha_ultimo_descuento = None
+        Coordinador.coordinador = self
+
+    @property
+    def atrasar_notas(self):
+        num = random()
+        if num <= 0.1:
+            return True
+        return False
+
+    @property
+    def descontar_notas(self):
+        # revisar: No debe hacerse en la última evaluación.
+        if self.c_descuentos == 3:
+            return False
+        # Debe revisar que no vuelva a pasar en menos de un mes (revisar)
+        # if self.fecha_ultimo_descuento - fecha_actual > 1 mes:
+        #     pass
+        num = random()
+        if num <= 0.5:
+            self.c_descuentos += 1
+            return True
+        return False
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 
