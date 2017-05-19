@@ -2,6 +2,7 @@ __author__ = 'Rcardo Del Rio'
 
 from integrantes import Alumno, Profesor, AyudanteDocencia, AyudanteTarea, Coordinador
 from evento import Evento
+from contenidos import Contenido
 
 '''
 COMENTARIOS
@@ -13,9 +14,6 @@ class Simulacion:
     Esta clase es la encargada de llevar todos los procesos de la simulación.
     Lleva la linea temporal de está y ejecuta en orden los eventos correspondientes.
     '''
-    def __init__(self):
-        lista_eventos = Evento.lista_eventos
-
     def cargar_integrantes(self):
         '''
         Este método lee el archivo 'integrantes.csv' y crea un objeto de cada integrante en su clase correspondiente,
@@ -39,23 +37,26 @@ class Simulacion:
                                 (integrante.strip().split(',') for integrante in archivo)))
             for ayudante in ayudantes:
                 if ayudante[1] == 'Coordinación':
-                    Coordinador(ayudante[0], ayudante[1], ayudante[2])
+                    Coordinador(ayudante[0], ayudante[2])
                 elif ayudante[1] == 'Docencia':
-                    AyudanteDocencia(ayudante[0], ayudante[1], ayudante[2])
+                    AyudanteDocencia(ayudante[0], ayudante[2])
                 elif ayudante[1] == 'Tareas':
-                    AyudanteTarea(ayudante[0], ayudante[1], ayudante[2])
+                    AyudanteTarea(ayudante[0], ayudante[2])
 
 
     def run(self):
-        while self.lista_eventos:
+        self.cargar_integrantes()
+        Contenido.importar_info_contenidos()
+        Evento.creacion_eventos_principales()
+        while Evento.lista_eventos:
             Evento.seleccionar_evento()
             Evento.ejecutar_evento()
 
 
 if __name__ == '__main__':
     s = Simulacion()
-    s.cargar_integrantes()
-    # s.run()
+    s.run()
+
 
     # c_alumnos = len(Alumno.lista_alumnos)
     # c_profesores = len(Profesor.lista_profesores)
@@ -63,3 +64,4 @@ if __name__ == '__main__':
     # c_TOTAL = c_alumnos + c_profesores + c_audantes
     #
     # print('{0:5} alumnos \n{1:5} profesores \n{2:5} ayudantes \n{3:5} TOTAL'.format(c_alumnos, c_profesores, c_audantes, c_TOTAL))
+

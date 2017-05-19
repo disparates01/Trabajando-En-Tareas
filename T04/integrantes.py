@@ -32,92 +32,122 @@ class Alumno(Integrante):
     def __init__(self, nombre, seccion=None):
         Integrante.__init__(self, nombre, seccion)
         # Parametros que se fijan una sola vez:
-        self.cantidad_de_creditos = 0
+        self.numero_lista = None
+        self.cant_creditos = 0
         self.personalidad = '' # revisar: ingresar forma de obtener personalidad
+        # Cada lista mas interna es: [nota_esperada, nota_final]
+        self.notas_actividades = [[None,None],[None,None],[None,None],[None,None],[None,None],[None,None],[None,None],
+                                  [None,None],[None,None],[None,None],[None,None],[None,None]]
+        self.notas_tareas = [[None,None],[None,None],[None,None],[None,None],[None,None],[None,None]]
+        self.notas_controles = [[None,None],[None,None],[None,None],[None,None],[None,None]]
+        self.nota_examen = [None,None]
+        # notas = {Actividad: {1: [esperada, final], 2: }, Tarea: {}, Control: {}, Examen {}}      }
 
-        # REHACER TODO ESTO USANDO PROPERTIES
+
         # Parametros que se modifican constantemente:
-        # Se comienza asignandoles un primer valor que luego sera modificado.
-        self.__horas_estudio = 0 # Horas que el estudiante dedicara al curso en una semana. Se modifica semana a semana.
-        self.__confianza = [None,0] # [Valor, ultimo evento que la modifico]
-        self.__manejo_de_contenidos = 0
-        self.__nivel_de_programacion = randint(2,10) #Se calcula semanalmente
-        self.__nota_esperada = 0
-
-        self.reunion_profesor = False # revisar: No puede visitar al profesor dos semanas seguidas
-        self.fiesta = False
-
-        self.escuho_tips_clase = False
-
+        # Tienen la forma: [valor, ultimo tiempo en que se modificó]
+        # Horas que el estudiante dedicara al curso en una semana. Se modifica semana a semana.
+        self.__horas_estudio = [None, 0]
+        self.__confianza = [uniform(2,12), 0] # [valor, numero evento]
+        self.__manejo_de_contenidos = [None, 0]
+        self.__nivel_de_programacion = [randint(2,10), 0] # Se calcula semanalmente
+        self.__nota_esperada = [None, 0]
+        self.escucho_tips_clase = [False, 0]
+        self.reunion_profesor = [False, 0] # revisar: No puede visitar al profesor dos semanas seguidas
+        self.fiesta = [False, 0]
         # Asignacion de los primeros valores:
         self.det_cant_creditos()
-
-        # Se anade al alumno a la list de alumnos:
+        # Se anade al alumno a la lista de alumnos:
         Alumno.lista_alumnos.append(self)
 
-        # revisar: estas properties no estan bien implementadas, solo estaba tirando lineas
-        @property
-        def horas_semana(self):
-            return self._horas_semana # Horas que el estudiante dedicara al curso en una semana. Se modifica semana a semana.
+    @property
+    def horas_semana(self):
+        '''
+        Determina la cantidad de horas que el estudiante dedicará al curso en la semana actual
+        Devulve el valor correspondiente cada vez que se llama a horas_semana
+        :return:
+        '''
+        if actualizado_semana(self.__horas_estudio[1]):
+            return self.__horas_estudio[0]
+        else:
+            if self.cant_creditos == 40:
+                self.__horas_estudio[0] = randint(10,25)
+            elif self.cant_creditos == 50:
+                self.__horas_estudio[0] = randint(10,15)
+            elif self.cant_creditos == 55:
+                self.__horas_estudio[0] = randint(5,15)
+            elif self.cant_creditos == 60:
+                self.__horas_estudio[0] = randint(5,10)
+            # Actualizamos el tiempo de la ultima modificacion
+            self.__horas_estudio[1] = Evento.evento_actual.tiempo
+            return self.__horas_estudio[0]
 
-        @property # Esta property deberia estar bien, usarla de molde para las demas
-        def confianza(self):
-            # Revisa se tiene un primer valor asignado:
-            if not self._confianza:
-                self._confianza = randint(2,12)
-                return self.__confianza[0]
+    @property # Esta property deberia estar bien, usarla de molde para las demas
+    def confianza(self):
+        '''
+        Esta property mantiene actualizado el valor de la confianza
+        :return:
+        '''
+        # Revisa si el valor esta actualizado, sino, lo actualiza:
+        n_evento = Evento.evento_actual.numero
+        evento_ult_act = self.__confianza[1]
+        # revisar: Asegurarse que siempre que hay un evento 'entrega de notas' se llame a la property 'confianza'
+        if (evento_ult_act < n_evento) and Evento.evento_actual.tipo == 7: # Es una entrega de notas
+            self.__confianza += self.__act_confianza()
+            # Ultimo evento que modifico la variable:
+            self.__confianza[1] = Evento.evento_actual.numero
+            return self.__confianza[0]
+        else:
+            return self.__confianza[0]
 
-            # Revisa si el valor esta actualizado, sino, lo actualiza:
-            if self.__confianza[1] < Evento.evento_actual.numero:
-                                                                        # revisar: definir como debe actualizarse en base al tipo de evento
-                self.__confianza += self.__act_confianza()
-                # Actualiza el ultimo evento que modifico la variable
-                self.__confianza[1] = Evento.evento_actual.numero
-                return self.__confianza[0]
+    @property
+    def manejo_contenidos(self):
+        if esta_actualizado(self.__manejo_de_contenidos[1]):
+            return self.__manejo_de_contenidos[0]
+        else:
+            dificultad = Contenido.contenido_actual.dificultad
+            self.__manejo_de_contenidos[0] = (1 / dificultad) * self.horas_semana
+            self.__manejo_de_contenidos[1] = Evento.evento_actual.tiempo
+            return self.__manejo_de_contenidos[0]
 
-        @property
-        def manejo_contenidos(self):
-            return self.__manejo_de_contenidos
 
-        @property
-        def nivel_programacion(self):
-            return self.__nivel_de_programacion
+    @property
+    def nivel_programacion(self):
+        return self.__nivel_de_programacion
 
-        @property
-        def nota_esperada(self):
-            return self.__nota_esperada
+    @property
+    def nota_esperada(self):
+        return self.__nota_esperada
 
-        @property
-        def horas_estudio(self):
-            return self.__horas_estudio
 
-        @property
-        def progreso_act_actual(self):
-            __PEP8 = (0.7*manejo_contenidos) + (0.2*nivel_programacion) + (0.1*confianza)
-            __funcionalidad = (0.3*manejo_contenidos) + (0.7*nivel_programacion) + (0.1*confianza)
-            __contenidos = (0.7*manejo_contenidos) + (0.2*nivel_programacion) + (0.1*confianza)
-            return (0.2*__PEP8) + (0.4*__funcionalidad) + (0.4*__contenidos)
-        
-        @property
-        def progreso_tarea_actual(self):
-            __horas = horas_estudio * 0.7
-            __PEP8 = (0.5*__horas) + (0.2*nivel_programacion)
-            __contenido = (0.7*manejo_contenidos) + (0.1*nivel_programacion) + (0.2*__horas)
-            __funcionalidad = (0.5*manejo_contenidos) + (0.1*nivel_programacion) + (0.4*__horas)
-            return (0.2*__PEP8) + (0.4*__contenido) + (0.4*__funcionalidad)
+    @property
+    def progreso_act_actual(self):
+        __PEP8 = (0.7*self.manejo_contenidos) + (0.2*self.nivel_programacion) + (0.1*self.confianza)
+        __funcionalidad = (0.3*self.manejo_contenidos) + (0.7*self.nivel_programacion) + (0.1*self.confianza)
+        __contenidos = (0.7*self.manejo_contenidos) + (0.2*self.nivel_programacion) + (0.1*self.confianza)
+        return (0.2*__PEP8) + (0.4*__funcionalidad) + (0.4*__contenidos)
 
-        @property
-        def progreso_control_actual(self):
-            __contenidos = (0.7*manejo_contenidos) + (0.05*nivel_programacion) + (0.25*confianza)
-            __funcionalidad = (0.3*manejo_contenidos) + (0.2*nivel_programacion) + (0.5*confianza)
-            return (0.7*__contenidos) + (0.3*__funcionalidad)
+    @property
+    def progreso_tarea_actual(self):
+        __horas = self.horas_estudio * 0.7
+        __PEP8 = (0.5*__horas) + (0.2*self.nivel_programacion)
+        __contenido = (0.7*self.manejo_contenidos) + (0.1*self.nivel_programacion) + (0.2*__horas)
+        __funcionalidad = (0.5*self.manejo_contenidos) + (0.1*self.nivel_programacion) + (0.4*__horas)
+        return (0.2*__PEP8) + (0.4*__contenido) + (0.4*__funcionalidad)
 
-        @property
-        def progreso_examen(self):
-            # revisar: falta implementar, recordar que el rpogreso es por pregunta.
-            __contenidos = 0
-            __funcionalidad = 0
-            return (0.7*__contenidos) + (0.3*__funcionalidad)
+    @property
+    def progreso_control_actual(self):
+        __contenidos = (0.7*self.manejo_contenidos) + (0.05*self.nivel_programacion) + (0.25*self.confianza)
+        __funcionalidad = (0.3*self.manejo_contenidos) + (0.2*self.nivel_programacion) + (0.5*self.confianza)
+        return (0.7*__contenidos) + (0.3*__funcionalidad)
+
+    @property
+    def progreso_examen(self):
+        # revisar: falta implementar, recordar que el rpogreso es por pregunta.
+        __contenidos = 0
+        __funcionalidad = 0
+        return (0.7*__contenidos) + (0.3*__funcionalidad)
+
 
     def det_cant_creditos(self):
         '''
@@ -140,19 +170,19 @@ class Alumno(Integrante):
         Este metodo determina la personalidad del estudiante
         :return:
         '''
-        pass
+        pass # revisar:
 
-    def act_manejo_cont(self, n_materia, horas):
-        '''
-        Este metodo recibe el numero asociado a la materia que se está pasando y la cantidad de horas que el estudiante
-        ha dedicado a su estudio.
-        Modifica el atributo 'manejo_de_contenidos' del estudiante en base a la formula dada.
-        :param n_materia:
-        :param horas:
-        :return:
-        '''
-        dificultad = Contenido.contenido_actual.diicultad
-        self.manejo_de_contenidos = (1/dificultad) * horas
+    # def act_manejo_cont(self, n_materia, horas):
+    #     '''
+    #     Este metodo recibe el numero asociado a la materia que se está pasando y la cantidad de horas que el estudiante
+    #     ha dedicado a su estudio.
+    #     Modifica el atributo 'manejo_de_contenidos' del estudiante en base a la formula dada.
+    #     :param n_materia:
+    #     :param horas:
+    #     :return:
+    #     '''
+    #     dificultad = Contenido.contenido_actual.diicultad
+    #     self.manejo_de_contenidos = (1/dificultad) * horas
 
     def act_nota_esperada(self):
         '''
@@ -171,7 +201,6 @@ class Alumno(Integrante):
         :return:
         '''
         # Definicion de variables
-        C = self.confianza
         Naf = None # Debe ser la nota final de la actividad
         Nae = None # Debe ser la nota esperada de la actividad
         Ntf = None # Debe ser la nota final de la tarea
@@ -180,7 +209,7 @@ class Alumno(Integrante):
         Nce = None # Debe ser la nota esperada del control
         # Deiniendo x:
         if Naf:
-            X = 1
+            x = 1
         else:
             x = 0
         # Definiendo y:
@@ -192,7 +221,7 @@ class Alumno(Integrante):
             z = 1
         else:
             z = 0
-        # Calculando y modificando la variable 'confianza':
+        # Calculando y modificando:
         confianza_notas = 3*x*(Naf - Nae) + 5*y*(Ntf - Nte) + z*(Ncf - Nce)
         return confianza_notas
 
@@ -248,6 +277,9 @@ class Alumno(Integrante):
         solicitud_de_ayuda = triangular(1,10,3)
         for i in range (solicitud_de_ayuda):
             self.duda_catedra()
+
+    def __le__(self, other):
+        return self.nombre <= other.nombre
 
 
 
@@ -404,6 +436,22 @@ class Coordinador(Integrante):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
+
+def esta_actualizado(tiempo):
+    t_actual = Evento.evento_actual.tiempo
+    if tiempo < t_actual:
+        return False
+    return True
+
+def actualizado_semana(tiempo):
+    t_actual = Evento.evento_actual.tiempo
+    s_actual = (t_actual//7)+ 1
+    s_ultima_act = (tiempo //7) +1
+    if s_ultima_act < s_actual:
+        return False
+    return True
+
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 
