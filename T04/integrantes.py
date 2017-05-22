@@ -2,7 +2,16 @@ __author__ = 'Ricardo Del Rio'
 
 from random import choice, random, randint, uniform, triangular
 from contenidos import Contenido
-from evento import Evento
+from evento import Evento, semana
+from logging import getLogger, DEBUG, StreamHandler, Formatter
+
+logger = getLogger(__name__)
+logger.setLevel(DEBUG)
+formatter = Formatter(
+    '%(levelname)s[%(name)s, linea %(lineno)d]:   %(message)s ')
+stream_handler = StreamHandler()
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
 
 '''
 COMENTARIOS
@@ -14,49 +23,78 @@ COMENTARIOS
 
 # ----------------------------------------------------------------------------------------------------------------------
 
+
 class Integrante():
     '''
     Esta clase representa a todos los integrantes del ramo 'Avanzación Programada'.
     '''
+
     def __init__(self, nombre, seccion=None):
         self.nombre = nombre
         self.seccion = seccion
 
 # ----------------------------------------------------------------------------------------------------------------------
 
+
 class Alumno(Integrante):
-    lista_alumnos = []
     '''
     Esta clase representa a los alumnos del curso.
     '''
+    lista_alumnos = []
+    personalidades = {1: 'eficiente', 2: 'artistico', 3: 'teorico'}
+    alumnos_botaron_ramo = 0
+
     def __init__(self, nombre, seccion=None):
         Integrante.__init__(self, nombre, seccion)
         # Parametros que se fijan una sola vez:
         self.numero_lista = None
         self.cant_creditos = 0
-        self.personalidad = '' # revisar: ingresar forma de obtener personalidad
-        # Cada lista mas interna es: [nota_esperada, nota_final]
-        self.notas_actividades = [[None,None],[None,None],[None,None],[None,None],[None,None],[None,None],[None,None],
-                                  [None,None],[None,None],[None,None],[None,None],[None,None]]
-        self.notas_tareas = [[None,None],[None,None],[None,None],[None,None],[None,None],[None,None]]
-        self.notas_controles = [[None,None],[None,None],[None,None],[None,None],[None,None]]
-        self.nota_examen = [None,None]
-        # notas = {Actividad: {1: [esperada, final], 2: }, Tarea: {}, Control: {}, Examen {}}      }
-
-
-        # Parametros que se modifican constantemente:
-        # Tienen la forma: [valor, ultimo tiempo en que se modificó]
-        # Horas que el estudiante dedicara al curso en una semana. Se modifica semana a semana.
-        self.__horas_estudio = [None, 0]
-        self.__confianza = [uniform(2,12), 0] # [valor, numero evento]
-        self.__manejo_de_contenidos = [None, 0]
-        self.__nivel_de_programacion = [randint(2,10), 0] # Se calcula semanalmente
-        self.__nota_esperada = [None, 0]
-        self.escucho_tips_clase = [False, 0]
-        self.reunion_profesor = [False, 0] # revisar: No puede visitar al profesor dos semanas seguidas
-        self.fiesta = [False, 0]
-        # Asignacion de los primeros valores:
         self.det_cant_creditos()
+        self.personalidad = Alumno.personalidades[randint(1, 3)]
+        # Cada lista mas interna es: [nota_esperada, nota_final] y el numero de
+        # la evaluacion ee la posicion +1
+        self.notas_actividades = [
+            [
+                None, None], [
+                None, None], [
+                None, None], [
+                    None, None], [
+                        None, None], [
+                            None, None], [
+                                None, None], [
+                                    None, None], [
+                                        None, None], [
+                                            None, None], [
+                                                None, None], [
+                                                    None, None]]
+        self.notas_tareas = [
+            [
+                None, None], [
+                None, None], [
+                None, None], [
+                    None, None], [
+                        None, None], [
+                            None, None]]
+        self.notas_controles = [[None, None], [None, None], [
+            None, None], [None, None], [None, None]]
+        self.nota_examen = [None, None]
+        self.boto_ramo = False
+        # notas = {Actividad: {1: [esperada, final], 2: }, Tarea: {}, Control:
+        # {}, Examen {}}      }
+
+        # PROPERTIES QUE SE MODIFICAN CONSTANTEMENTE:
+        # Tienen la forma: [valor, ultimo tiempo en que se modificó]
+        self.__horas_estudio = [None, 0]
+        self.__confianza = [uniform(2, 12), 0]  # [valor, numero evento]
+        self.__manejo_de_contenidos = [None, 0]
+        self.__nivel_de_programacion = [
+            uniform(2, 10), 0]  # Se calcula semanalmente
+        self.__nota_esperada = [None, 0]
+        # OTROS VALORES QUE CAMBIAN CONSTANTEMENTE
+        self.escucho_tips_clase = [False, 0]
+        # revisar: No puede visitar al profesor dos semanas seguidas
+        self.reunion_profesor = [False, 0]
+        self.fiesta = [False, 0]
         # Se anade al alumno a la lista de alumnos:
         Alumno.lista_alumnos.append(self)
 
@@ -71,83 +109,142 @@ class Alumno(Integrante):
             return self.__horas_estudio[0]
         else:
             if self.cant_creditos == 40:
-                self.__horas_estudio[0] = randint(10,25)
+                self.__horas_estudio[0] = randint(10, 25)
             elif self.cant_creditos == 50:
-                self.__horas_estudio[0] = randint(10,15)
+                self.__horas_estudio[0] = randint(10, 15)
             elif self.cant_creditos == 55:
-                self.__horas_estudio[0] = randint(5,15)
+                self.__horas_estudio[0] = randint(5, 15)
             elif self.cant_creditos == 60:
-                self.__horas_estudio[0] = randint(5,10)
+                self.__horas_estudio[0] = randint(5, 10)
             # Actualizamos el tiempo de la ultima modificacion
             self.__horas_estudio[1] = Evento.evento_actual.tiempo
+
             return self.__horas_estudio[0]
 
-    @property # Esta property deberia estar bien, usarla de molde para las demas
+    @property
     def confianza(self):
         '''
-        Esta property mantiene actualizado el valor de la confianza
+        Esta property mantiene actualizado el valor de la confianza cada verz que hay una entrega de notas
         :return:
         '''
         # Revisa si el valor esta actualizado, sino, lo actualiza:
         n_evento = Evento.evento_actual.numero
         evento_ult_act = self.__confianza[1]
-        # revisar: Asegurarse que siempre que hay un evento 'entrega de notas' se llame a la property 'confianza'
-        if (evento_ult_act < n_evento) and Evento.evento_actual.tipo == 7: # Es una entrega de notas
+        # revisar: Asegurarse que siempre que hay un evento 'entrega de notas'
+        # se llame a la property 'confianza'
+        if (evento_ult_act <
+                n_evento) and Evento.evento_actual.tipo == 7:  # Es una entrega de notas
             self.__confianza += self.__act_confianza()
             # Ultimo evento que modifico la variable:
             self.__confianza[1] = Evento.evento_actual.numero
-            return self.__confianza[0]
-        else:
-            return self.__confianza[0]
+        return self.__confianza[0]
 
     @property
     def manejo_contenidos(self):
         if esta_actualizado(self.__manejo_de_contenidos[1]):
             return self.__manejo_de_contenidos[0]
         else:
-            dificultad = Contenido.contenido_actual.dificultad
-            self.__manejo_de_contenidos[0] = (1 / dificultad) * self.horas_semana
+            dificultad = Contenido.lista_contenidos[semana(
+                Evento.evento_actual.tiempo)].dificultad
+            self.__manejo_de_contenidos[0] = (
+                1 / dificultad) * self.horas_semana
             self.__manejo_de_contenidos[1] = Evento.evento_actual.tiempo
             return self.__manejo_de_contenidos[0]
 
-
     @property
     def nivel_programacion(self):
-        return self.__nivel_de_programacion
+        '''
+        Actualiza la variable 'nivel_de_programacion' en base a los casos y la formula dada.
+        :return float:
+        '''
+        if actualizado_semana(self.__nivel_de_programacion[1]):
+            return self.__nivel_de_programacion[1]
+        else:
+            # Se define la variable 'v':
+            if self.reunion_profesor:
+                v = 0.08
+            else:
+                v = 0
+            # Se define la variable 'w':
+            if self.fiesta:
+                w = 0.15
+            else:
+                w = 0
+            # Se define la formula:
+            self.__nivel_de_programacion[0] = 1.05 * \
+                (1 + v + w) * self.__nivel_de_programacion[0]
+            self.__nivel_de_programacion[1] = Evento.evento_actual.tiempo
+            return self.__nivel_de_programacion[0]
 
     @property
     def nota_esperada(self):
-        return self.__nota_esperada
+        '''
+        Esta property revisa cual es el contenido que se esta pasando actualmente llamando a la variable
+        'contenido_actual' de la clase Contenido.
+        Llama a la función del objeto 'Contenido' que permite calcular la nota esperada del alumno en base a la cantidad
+        de horas que dedico al estudio de la materia. Se actualiza la variable 'nota_esperada' con el retorno de dicha
+        funcion.
+        :return:
+        '''
+        # Revisa si el valor esta actualizado, sino, lo actualiza:
+        n_evento = Evento.evento_actual.numero
+        evento_ult_act = self.__confianza[1]
+        eventos_evaluaciones = [1, 2, 3, 4]
+        # revisar: Asegurarse que siempre que hay un evento 'evaluacion' se
+        # llame a la property 'nota esperada'
+        if (evento_ult_act < n_evento) and (
+                Evento.evento_actual.tipo in eventos_evaluaciones):  # Es una evaluacion
+            n_contenido = semana(Evento.evento_actual.tiempo)
+            contenido = Contenido.lista_contenidos[n_contenido]
+            dia_de_la_semana = Evento.evento_actual.tiempo % 7
+            horas_hasta_dia = (self.horas_semana / 7) * dia_de_la_semana
+            if horas_hasta_dia <= int(contenido.rango1[-1]):
+                self.__nota_esperada[0] = round(uniform(1, 3.9), 2)
+            elif horas_hasta_dia <= int(contenido.rango2[-1]):
+                self.__nota_esperada[0] = round(uniform(4, 5.9), 2)
+            elif horas_hasta_dia <= int(contenido.rango3[-1]):
+                self.__nota_esperada[0] = round(uniform(6, 6.9), 2)
+            elif horas_hasta_dia >= int(contenido.rango4[-1]):
+                self.__nota_esperada[0] = 7
+            self.__nota_esperada[1] = Evento.evento_actual.numero
+        return self.__nota_esperada[0]
 
+    # Progresos tareas
 
     @property
     def progreso_act_actual(self):
-        __PEP8 = (0.7*self.manejo_contenidos) + (0.2*self.nivel_programacion) + (0.1*self.confianza)
-        __funcionalidad = (0.3*self.manejo_contenidos) + (0.7*self.nivel_programacion) + (0.1*self.confianza)
-        __contenidos = (0.7*self.manejo_contenidos) + (0.2*self.nivel_programacion) + (0.1*self.confianza)
-        return (0.2*__PEP8) + (0.4*__funcionalidad) + (0.4*__contenidos)
+        __PEP8 = (0.7 * self.manejo_contenidos) + \
+            (0.2 * self.nivel_programacion) + (0.1 * self.confianza)
+        __funcionalidad = (0.3 * self.manejo_contenidos) + \
+            (0.7 * self.nivel_programacion) + (0.1 * self.confianza)
+        __contenidos = (0.7 * self.manejo_contenidos) + \
+            (0.2 * self.nivel_programacion) + (0.1 * self.confianza)
+        return (0.2 * __PEP8) + (0.4 * __funcionalidad) + (0.4 * __contenidos)
 
     @property
     def progreso_tarea_actual(self):
         __horas = self.horas_estudio * 0.7
-        __PEP8 = (0.5*__horas) + (0.2*self.nivel_programacion)
-        __contenido = (0.7*self.manejo_contenidos) + (0.1*self.nivel_programacion) + (0.2*__horas)
-        __funcionalidad = (0.5*self.manejo_contenidos) + (0.1*self.nivel_programacion) + (0.4*__horas)
-        return (0.2*__PEP8) + (0.4*__contenido) + (0.4*__funcionalidad)
+        __PEP8 = (0.5 * __horas) + (0.2 * self.nivel_programacion)
+        __contenido = (0.7 * self.manejo_contenidos) + \
+            (0.1 * self.nivel_programacion) + (0.2 * __horas)
+        __funcionalidad = (0.5 * self.manejo_contenidos) + \
+            (0.1 * self.nivel_programacion) + (0.4 * __horas)
+        return (0.2 * __PEP8) + (0.4 * __contenido) + (0.4 * __funcionalidad)
 
     @property
     def progreso_control_actual(self):
-        __contenidos = (0.7*self.manejo_contenidos) + (0.05*self.nivel_programacion) + (0.25*self.confianza)
-        __funcionalidad = (0.3*self.manejo_contenidos) + (0.2*self.nivel_programacion) + (0.5*self.confianza)
-        return (0.7*__contenidos) + (0.3*__funcionalidad)
+        __contenidos = (0.7 * self.manejo_contenidos) + (0.05 * \
+                        self.nivel_programacion) + (0.25 * self.confianza)
+        __funcionalidad = (0.3 * self.manejo_contenidos) + \
+            (0.2 * self.nivel_programacion) + (0.5 * self.confianza)
+        return (0.7 * __contenidos) + (0.3 * __funcionalidad)
 
     @property
     def progreso_examen(self):
-        # revisar: falta implementar, recordar que el rpogreso es por pregunta.
+        # revisar: falta implementar, recordar que el progreso es por pregunta.
         __contenidos = 0
         __funcionalidad = 0
-        return (0.7*__contenidos) + (0.3*__funcionalidad)
-
+        return (0.7 * __contenidos) + (0.3 * __funcionalidad)
 
     def det_cant_creditos(self):
         '''
@@ -157,56 +254,32 @@ class Alumno(Integrante):
         '''
         num = random()
         if num <= 0.1:
-            self.cantidad_de_creditos = 40
+            self.cant_creditos = 40
         elif num <= 0.8:
-            self.cantidad_de_creditos = 50
+            self.cant_creditos = 50
         elif num <= 0.95:
-            self.cantidad_de_creditos = 55
+            self.cant_creditos = 55
         elif num <= 1:
-            self.cantidad_de_creditos = 55
-
-    def det_personalidad(self):
-        '''
-        Este metodo determina la personalidad del estudiante
-        :return:
-        '''
-        pass # revisar:
-
-    # def act_manejo_cont(self, n_materia, horas):
-    #     '''
-    #     Este metodo recibe el numero asociado a la materia que se está pasando y la cantidad de horas que el estudiante
-    #     ha dedicado a su estudio.
-    #     Modifica el atributo 'manejo_de_contenidos' del estudiante en base a la formula dada.
-    #     :param n_materia:
-    #     :param horas:
-    #     :return:
-    #     '''
-    #     dificultad = Contenido.contenido_actual.diicultad
-    #     self.manejo_de_contenidos = (1/dificultad) * horas
-
-    def act_nota_esperada(self):
-        '''
-        Este metodo revisa cual es el contenido que se esta pasando actualmente llamando a la variable
-        'contenido_actual' de la clase Contenido.
-        Llama a la función del objeto 'Contenido' que permite calcular la nota esperada del alumno en base a la cantidad
-        de horas que dedico al estudio de la materia. Se actualiza la variable 'nota_esperada' con el retorno de dicha
-        funcion.
-        :return:
-        '''
-        self.nota_esperada = Contenido.contenido_actual.nota_esperada(self.horas_semana) # revisar: Verificar que hora de estudio es la que se debe entregar, ¿semanal, diaria?
+            self.cant_creditos = 55
 
     def __act_confianza(self):
         '''
-        Actualiza el nivel de confanza del alumno semana a semana según la formula dada.
+        Actualiza el nivel de confanza del alumno según la formula dada.
         :return:
         '''
         # Definicion de variables
-        Naf = None # Debe ser la nota final de la actividad
-        Nae = None # Debe ser la nota esperada de la actividad
-        Ntf = None # Debe ser la nota final de la tarea
-        Nte = None # Debe ser la nota esperada de la tarea
-        Ncf = None # Debe ser la nota final del control
-        Nce = None # Debe ser la nota esperada del control
+        for tupla in Evento.evento_actual.lista_entregas:
+            if tupla[0] == 1:  # actividad
+                # Nota final actividad
+                Naf = self.notas_actividades[tupla[1] - 1][1]
+                # Nota esperada actividad
+                Nae = self.notas_actividades[tupla[1] - 1][0]
+            elif tupla[0] == 2:  # tarea
+                Ntf = self.notas_actividades[tupla[1] - 1][1]
+                Nte = self.notas_actividades[tupla[1] - 1][0]
+            elif tupla[0] == 3:  # control
+                Ncf = self.notas_actividades[tupla[1] - 1][1]
+                Nce = self.notas_actividades[tupla[1] - 1][0]
         # Deiniendo x:
         if Naf:
             x = 1
@@ -217,36 +290,15 @@ class Alumno(Integrante):
             y = 1
         else:
             y = 0
+        # Definiendo z:
         if Ncf:
             z = 1
         else:
             z = 0
         # Calculando y modificando:
-        confianza_notas = 3*x*(Naf - Nae) + 5*y*(Ntf - Nte) + z*(Ncf - Nce)
+        confianza_notas = 3 * x * (Naf - Nae) + 5 * \
+            y * (Ntf - Nte) + z * (Ncf - Nce)
         return confianza_notas
-
-    def act_nivel_programacion(self):
-        '''
-        Actualiza la variable 'nivel_de_programacion' en base a los casos y la formula dada.
-        :return:
-        '''
-        # Se define 'n':
-        n = None # ¿QUE RAYOS SE SUPONE QUE ES 'n'? pagina 5
-        # Se define la variable 'v':
-        if self.reunion_profesor:
-            v = 0.08
-        else:
-            v = 0
-        # Se define la variable 'w':
-        if self.fiesta:
-            w = 0.15
-        else:
-            w = 0
-        # Se define la formula:
-        if n == 1:
-            Pn = random(2,10)
-        if n > 1:
-            Pn = 1.05*(1 + v + w) * self.nivel_de_programacion # revisar: que se cumpla que es el nivel de programacion anterior despues de hacer cambios
 
     def duda_catedra(self):
         '''
@@ -264,9 +316,45 @@ class Alumno(Integrante):
                 ayudante.resolver_dudas()
                 self.__manejo_de_contenidos *= 1.1  # Aumenta el manejo de contenidos en un 1%
                 resuelto = True
-            except:
+            except BaseException:
                 pass
             n += 1
+
+    def calc_nota_actividad(self, numero):
+        # revisar: en caso de que exista la posibilidad de que hayan más
+        # evaluaciones que la cantidad que se fijaron en un ptrincipio, el
+        # programa deberá agregarlas haciendo append[nota esperada, nota final]
+        num = semana(Evento.evento_actual.tiempo)
+        exigencia = 7 + (randint(1, 5) /
+                         Contenido.lista_contenidos[num].dificultad)
+        self.notas_actividades[numero -
+                               1][1] = round(max((self.progreso_act_actual /
+                                                  exigencia) *
+                                                 7, 1), 2)
+
+    def calc_nota_tarea(self, numero):
+        num = semana(Evento.evento_actual.tiempo)
+        exigencia = 7 + (randint(1, 5) /
+                         Contenido.lista_contenidos[num].dificultad)
+        self.notas_tareas[numero -
+                          1][1] = round(max((self.progreso_act_actual /
+                                             exigencia) *
+                                            7, 1), 2)
+
+    def calc_nota_control(self, numero):
+        num = semana(Evento.evento_actual.tiempo)
+        exigencia = 7 + (randint(1, 5) /
+                         Contenido.lista_contenidos[num].dificultad)
+        self.notas_controles[numero -
+                             1][1] = round(max((self.progreso_control_actual /
+                                                exigencia) *
+                                               7, 1), 2)
+
+    def calc_nota_examen(self, numero):
+        self.nota_examen[1] = 4  # revisar: esto esta mal, solo para probar
+
+    def entrega_tarea(self):
+        pass
 
     def catedra(self):
         '''
@@ -274,14 +362,30 @@ class Alumno(Integrante):
         Llama a la función que hace que el estudiante resuelva sus dudas la cantidad de veces que se establecen.
         :return:
         '''
-        solicitud_de_ayuda = triangular(1,10,3)
-        for i in range (solicitud_de_ayuda):
+        solicitud_de_ayuda = triangular(1, 10, 3)
+        for i in range(solicitud_de_ayuda):
             self.duda_catedra()
+
+    def evaluar_botar_ramo(self):
+        sum_notas = 0
+        for notas in self.notas_actividades:
+            if notas[1]:
+                sum_notas += notas[1]
+        for notas in self.notas_tareas:
+            if notas[1]:
+                sum_notas += notas[1]
+        for notas in self.notas_controles:
+            if notas[1]:
+                sum_notas += notas[1]
+        s = (self.confianza * 0.8) + (sum_notas * 0.2)
+        if s < 20:
+            self.boto_ramo = True
+            Alumno.alumnos_botaron_ramo += 1
+
+        s = (self.confianza * 0.8) + (sum_notas*0.2)
 
     def __le__(self, other):
         return self.nombre <= other.nombre
-
-
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -291,6 +395,7 @@ class Profesor(Integrante):
     '''
     Esta clase representa a los profesores del curso.
     '''
+
     def __init__(self, nombre, seccion=None):
         Integrante.__init__(self, nombre, seccion)
         self.dia_consultas_alumnos = None
@@ -302,10 +407,10 @@ class Profesor(Integrante):
         self.alumnos_semana = []
         if len(self.alumnos_quieren_reunion) > 10:
             while len(self.alumnos_semana) < 10:
-                self.alumnos_semana.append(self.alumnos_quieren_reunion.pop(randint(0,len(self.alumnos_quieren_reunion) - 1)))
+                self.alumnos_semana.append(self.alumnos_quieren_reunion.pop(
+                    randint(0, len(self.alumnos_quieren_reunion) - 1)))
         else:
             self.alumnos_semana = self.alumnos_quieren_reunion
-
 
     def atender_alumnos(self):
         for alumno in self.alumnos_semana:
@@ -319,6 +424,7 @@ class AyudanteTarea(Integrante):
     Esta clase representa a los ayudantes de tareas del curso.
     '''
     ayudantes_tareas = []
+
     def __init__(self, nombre, seccion=None):
         Integrante.__init__(self, nombre, seccion)
         AyudanteTarea.ayudantes_tareas.append(self)
@@ -331,6 +437,7 @@ class AyudanteDocencia(Integrante):
     ayudantes_docencia = []
     ayudantia = []
     ayudantes_secciones = {}
+
     def __init__(self, nombre, seccion=None):
         Integrante.__init__(self, nombre, seccion)
         AyudanteDocencia.ayudantes_docencia.append(self)
@@ -344,7 +451,8 @@ class AyudanteDocencia(Integrante):
         # Se limpia la lista
         AyudanteDocencia.ayudantia = []
         # Se selecciona al primer ayudante
-        AyudanteDocencia.ayudantia.append(choice(AyudanteDocencia.ayudantes_docencia))
+        AyudanteDocencia.ayudantia.append(
+            choice(AyudanteDocencia.ayudantes_docencia))
         # Se selecciona al segundo:
         stop = False
         while not stop:
@@ -363,12 +471,12 @@ class AyudanteDocencia(Integrante):
         AyudanteDocencia.ayudantes_secciones[3] = []
         while len(seleccionados) < 9:
             ayudante = choice(AyudanteDocencia.ayudantes_docencia)
-            if not ayudante in seleccionados:
+            if ayudante not in seleccionados:
                 seleccionados.append(ayudante)
         for i in range(3):
-           AyudanteDocencia.ayudantes_secciones[1].append(seleccionados.pop())
-           AyudanteDocencia.ayudantes_secciones[2].append(seleccionados.pop())
-           AyudanteDocencia.ayudantes_secciones[3].append(seleccionados.pop())
+            AyudanteDocencia.ayudantes_secciones[1].append(seleccionados.pop())
+            AyudanteDocencia.ayudantes_secciones[2].append(seleccionados.pop())
+            AyudanteDocencia.ayudantes_secciones[3].append(seleccionados.pop())
 
     @property
     def dudas_resueltas(self):
@@ -377,7 +485,6 @@ class AyudanteDocencia(Integrante):
         :return:
         '''
         return self.__dudas_resueltas
-
 
     def resolver_dudas(self):
         '''
@@ -407,6 +514,7 @@ class Coordinador(Integrante):
     Esta clase representa al ayudante coordinador del curso.
     '''
     coordinador = None
+
     def __init__(self, nombre, seccion=None):
         Integrante.__init__(self, nombre, seccion)
         self.c_descuentos = 0
@@ -422,16 +530,29 @@ class Coordinador(Integrante):
 
     @property
     def descontar_notas(self):
-        # revisar: No debe hacerse en la última evaluación.
         if self.c_descuentos == 3:
             return False
-        # Debe revisar que no vuelva a pasar en menos de un mes (revisar)
+        # Debe revisar que no vuelva a pasar en menos de un mes (revisar:)
         # if self.fecha_ultimo_descuento - fecha_actual > 1 mes:
         #     pass
         num = random()
         if num <= 0.5:
             self.c_descuentos += 1
             return True
+        return False
+
+    def recibir_notas(self):
+        evento = Evento.evento_actual
+        if self.descontar_notas:
+            for alumno in Alumno.lista_alumnos:
+                for notas in evento.lista_ev_recibidas:
+                    if notas[0] == 1:
+                        alumno.notas_actividades[notas[1] - 1][1] -= 0.5
+                    elif notas[0] == 2:
+                        alumno.notas_tareas[notas[1] - 1][1] -= 0.5
+                    elif notas[0] == 3:
+                        alumno.notas_controles[notas[1] - 1][1] -= 0.5
+                    return True
         return False
 
 
@@ -443,22 +564,13 @@ def esta_actualizado(tiempo):
         return False
     return True
 
+
 def actualizado_semana(tiempo):
+    if tiempo == 0:
+        return False
     t_actual = Evento.evento_actual.tiempo
-    s_actual = (t_actual//7)+ 1
-    s_ultima_act = (tiempo //7) +1
+    s_actual = (t_actual // 7) + 1
+    s_ultima_act = (tiempo // 7) + 1
     if s_ultima_act < s_actual:
         return False
     return True
-
-
-
-# ----------------------------------------------------------------------------------------------------------------------
-
-posibles_personalidades = ['eficiente', 'artistico', 'teorico']
-
-
-
-
-# ----------------------------------------------------------------------------------------------------------------------
-

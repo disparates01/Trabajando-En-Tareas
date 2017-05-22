@@ -2,13 +2,32 @@ __author__ = 'Ricardo Del Rio'
 
 from random import random, randint, uniform
 from os import sep
+from logging import getLogger, DEBUG, StreamHandler, Formatter
+
+logger = getLogger(__name__)
+logger.setLevel(DEBUG)
+formatter = Formatter(
+    '%(levelname)s[%(name)s, linea %(lineno)d]:   %(message)s ')
+stream_handler = StreamHandler()
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
+
 
 class Contenido:
     '''
     Cada objeto de esta clase representa uno de los contenidos que se ven en el curso 'Avanzacion Programada'
     '''
     lista_contenidos = []
-    def __init__(self, numero, nombre, dificultad, rango1, rango2, rango3, rango4):
+
+    def __init__(
+            self,
+            numero,
+            nombre,
+            dificultad,
+            rango1,
+            rango2,
+            rango3,
+            rango4):
         self.numero = numero
         self.nombre = nombre
         self.dificultad = dificultad
@@ -37,36 +56,21 @@ class Contenido:
                               contenido[5].strip(),
                               contenido[6].strip())
         Contenido.lista_contenidos.sort()
-        
-    def nota_esperada(self, horas):
-        '''
-        Este metodo calcula la nota que el alumno espera sacar en base a las horas que dedico al estudio de la materia.
-        Recibe como parametro la cantidad de horas semanales de estudio.
-        Retorna la nota esoerada.
-        :param horas:
-        :return float:
-        '''
-        if horas <= int(self.rango1[-1]):
-            return round(uniform(1, 3.9), 2)
-        elif horas <= int(self.rango2[-1]):
-            return round(uniform(4, 5.9), 2)
-        elif horas <= int(self.rango3[-1]):
-            return round(uniform(6, 6.9), 2)
-        elif horas >= int(self.rango4[-1]):
-            return 7
 
     def __str__(self):
         return '{} {} {} {} {} {} {}'.format(self.numero,
-                                            self.nombre,
-                                            self.dificultad,
-                                            self.rango1,
-                                            self.rango2,
-                                            self.rango3,
-                                            self.rango4)
+                                             self.nombre,
+                                             self.dificultad,
+                                             self.rango1,
+                                             self.rango2,
+                                             self.rango3,
+                                             self.rango4)
 
     def __le__(self, otro):
         return self.numero <= otro.numero
 
+    def __lt__(self, otro):
+        return self.numero < otro.numero
 
 
 if __name__ == '__main__':
