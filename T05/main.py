@@ -4,16 +4,25 @@ from PyQt5 import QtTest
 from PyQt5.QtCore import QThread, QThreadPool, QTime
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5 import QtWidgets # revisar:
-from logging import getLogger, DEBUG, WARNING, ERROR, INFO, StreamHandler, Formatter
+from logging import getLogger, DEBUG, WARNING, ERROR, INFO
+from loggers import archivo_logs, stream_handler, file_handler
 
-logger = getLogger(__name__)
-logger.setLevel(DEBUG)
-formatter = Formatter(
-    '%(levelname)s[%(name)s, linea %(lineno)d]:   %(message)s ')
-stream_handler = StreamHandler()
-stream_handler.setFormatter(formatter)
-logger.addHandler(stream_handler)
-
+# ------------------------------------------------------------------------------------------------------------- LOGGERS
+archivo_logs()
+info = getLogger('INFO [{}'.format(__name__))
+info.setLevel(INFO)
+info.addHandler(stream_handler)
+info.addHandler(file_handler)
+debug = getLogger('DEBUG [{}'.format(__name__))
+debug.setLevel(DEBUG)
+debug.addHandler(file_handler)
+warning = getLogger('WARNING [{}'.format(__name__))
+warning.setLevel(WARNING)
+warning.addHandler(file_handler)
+error = getLogger('ERROR [{}'.format(__name__))
+error.setLevel(ERROR)
+error.addHandler(file_handler)
+# ------------------------------------------------------------------------------------------------------------- * * *
 
 class Juego(QThread, QtWidgets.QDialog):
     def __init__(self, tamanho, objetos):
@@ -22,7 +31,7 @@ class Juego(QThread, QtWidgets.QDialog):
         # self.ui = T05_GUI()
         self.ui.setupUi(self)
 
-    # Sacado de ejemplo tetris REVISAR Y MODIFICAR
+    warning.warning('Sacado del tetris. REVISAR Y MODIFICAR')
     def keyPressEvent(self, event):
         # if not self.isStarted or self.curPiece.shape() == Tetrominoe.NoShape:
         #     super(Board, self).keyPressEvent(event)
@@ -46,23 +55,20 @@ class Juego(QThread, QtWidgets.QDialog):
             pass
             # self.tryMove(self.curPiece.rotateLeft(), self.curX, self.curY)
         else:
-            super(Board, self).keyPressEvent(event)
+            pass
+            # super(Board, self).keyPressEvent(event)
 
-        def checkear_colision(unidad)
-            for objeto in self.objetos:
-                if
-
-
-        def checkear_rango():
+    warning.warning('Completar')
+    def checkear_colision(self, unidad):
+        for objeto in self.objetos:
             pass
 
-        def
-
+    warning.warning('Completar')
+    def checkear_rango(self):
+        pass
 
 if __name__ == '__main__':
-    logger.debug('hola')
-    logger.debug('chao')
-
+    pass
     # app = QtWidgets.QApplication(argv)
     # myapp = Juego()
     # myapp.show()

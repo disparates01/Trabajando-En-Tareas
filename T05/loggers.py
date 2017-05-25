@@ -1,12 +1,14 @@
+from logging import Formatter, StreamHandler, FileHandler
+from datetime import datetime
+from os import sep
 
-from logging import getLogger, DEBUG, StreamHandler, Formatter
+def archivo_logs():
+    with open('INFO'+sep+'LeagueOfProgra.log', 'w', encoding='utf-8') as archivo:
+        archivo.write('\n ------------------------------------------------\n {}\n\n'.format(datetime.now()))
 
-def logger(texto):
-    logger = getLogger(__name__)
-    logger.setLevel(DEBUG)
-    formatter = Formatter(
-        '%(levelname)s[%(name)s, linea %(lineno)d]:   %(message)s ')
-    stream_handler = StreamHandler()
-    stream_handler.setFormatter(formatter)
-    logger.addHandler(stream_handler)
-    logger.debug(texto)
+archivo = 'INFO'+sep+'LeagueOfProgra.log'
+formatter = Formatter('%(name)s, linea %(lineno)d]:   %(message)s ')
+stream_handler = StreamHandler()
+stream_handler.setFormatter(formatter)
+file_handler = FileHandler(archivo)
+file_handler.setFormatter(formatter)
