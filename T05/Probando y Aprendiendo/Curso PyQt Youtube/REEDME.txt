@@ -1,0 +1,3 @@
+OJO: El tutorial es de PyQt4, no PyQt5. Cambian algunas pocas cosas.
+
+NÚMERO: Voy en el 8

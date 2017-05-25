@@ -5,6 +5,8 @@ class EdificiosUnidades:
         self.ubicacion = ubicacion
         self.sprite_sheet = sprite_sheet
 
+
+
 class Unidades(EdificiosUnidades):
     def __init__(self, vida, ubicacion, sprite_sheet, vel_mov, danho, vel_ataque, rango_ataque):
         super().__init__(vida, ubicacion, sprite_sheet)
