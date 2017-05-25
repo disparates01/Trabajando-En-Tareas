@@ -1,9 +1,7 @@
-
-
 class Tienda:
     def __init__(self, posicion, sprite_sheet):
         self.posicion = posicion
-        self.srpite_sheet = sprite_sheet
+        self.sprite_sheet = sprite_sheet
 
 #
 # class ObjetoTienda:
