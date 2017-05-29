@@ -39,25 +39,28 @@ class Unidades(EdificiosUnidades):
         self.ts_ataque = ts_ataque
 
 class Campeones(Unidades):
-    def __init__(self, vida, ubicacion, sprite_sheet, vel_mov, danho, vel_ataque, rango_ataque, nombre, habilidad_unica, enfriamiento_hab, muertes, ts_habilidad, personalidad, puntos, gastados, kills, destino):
+    dic_campeones = {}
+    def __init__(self, vida, ubicacion, sprite_sheet, vel_mov, danho, vel_ataque, rango_ataque, nombre, habilidad_unica, enfriamiento_hab):
         super().__init__(vida, ubicacion, vel_mov, danho, vel_ataque, rango_ataque, sprite_sheet)
         self.nombre = nombre
         self.habilidad_unica = habilidad_unica
         self.enfriamiento_hab = enfriamiento_hab
-        self.muertes = muertes
-        self.ts_habilidad = ts_habilidad
-        self.personalidad = personalidad
-        self.puntos = puntos
-        self.gastados = gastados
-        self.kills = kills
-        self.destino = destino
+        self.muertes = None
+        self.ts_habilidad = None
+        self.personalidad = None
+        self.puntos = None
+        self.gastados = None
+        self.kills = None
+        self.destino = None
 
 class Subditos(Unidades):
+    dic_subditos = {}
     def __init__(self, vida, ubicacion, sprite_sheet, vel_mov, danho, vel_ataque, rango_ataque, tipo):
         super().__init__(vida, ubicacion, sprite_sheet, vel_mov, danho, vel_ataque, rango_ataque)
         self.tipo = tipo
 
 class Torre(EdificiosUnidades):
+    formato_torre = []
     def __init__(self, vida, ubicacion, sprite_sheet, danho, vel_ataque, rango_ataque):
         super().__init__(vida, ubicacion, sprite_sheet)
         self.danho = danho
@@ -65,10 +68,12 @@ class Torre(EdificiosUnidades):
         self.rango_ataque = rango_ataque
 
 class Inhibidor(EdificiosUnidades):
+    formato_inhibidor = []
     def __init__(self, vida, ubicacion, sprite_sheet):
         super().__init__(vida, ubicacion, sprite_sheet)
 
 class Nexo(EdificiosUnidades):
+    formato_nexo = []
     def __init__(self, vida, ubicacion, sprite_sheet):
         super().__init__(vida, ubicacion, sprite_sheet)
 

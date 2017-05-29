@@ -24,11 +24,19 @@ class Tienda:
     def __init__(self, posicion, sprite_sheet):
         self.posicion = posicion
         self.sprite_sheet = sprite_sheet
+        self.lista_objetos = []
 
-#
-# class ObjetoTienda:
-#     def __init__(self, precio, bonificacion_atributo):
-#         self.precio = precio
-#         self.bon_atrinuto = bonificacion_atributo
+    def anhadir_objeto(self, *args):
+        objeto = ObjetoTienda(*args)
+        self.lista_objetos.append(objeto)
+
+
+
+
+
+class ObjetoTienda:
+    def __init__(self, precio, bonificacion_atributo):
+        self.precio = precio
+        self.bon_atributo = bonificacion_atributo
 
 

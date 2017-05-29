@@ -1,6 +1,9 @@
 # Pycharm
 .idea
 
+# Otros archivos y carpetas extra
+tiempo_programacion.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
