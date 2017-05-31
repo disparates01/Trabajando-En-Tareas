@@ -30,13 +30,10 @@ class Tienda:
         objeto = ObjetoTienda(*args)
         self.lista_objetos.append(objeto)
 
-
-
-
-
 class ObjetoTienda:
     def __init__(self, precio, bonificacion_atributo):
         self.precio = precio
         self.bon_atributo = bonificacion_atributo
+
 
 

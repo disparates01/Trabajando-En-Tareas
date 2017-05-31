@@ -20,12 +20,35 @@ error.addHandler(file_handler)
 
 
 class EdificiosUnidades:
-    def __init__(self, vida, ubicacion, sprite_sheet, team):
+    def __init__(self, vida, ubicacion, sprite_sheet, team, largo):
         self.vida = vida
-        self.ubicacion = ubicacion
+        self.__ubicacion = ubicacion
         self.sprite_sheet = sprite_sheet
         self.team = team
+        self.largo = largo
 
+        self.__ur = None
+        self.__ll = None
+        self.__lr = None
+
+    @property
+    def ul(self):
+        return self.__ubicacion
+
+    @property
+    def ur(self):
+        x, y = self.__ubicacion
+        return x + self.largo, y
+
+    @property
+    def ll(self):
+        x, y = self.__ubicacion
+        return x, y + self.largo
+
+    @property
+    def lr(self):
+        x, y = self.__ubicacion
+        return x + self.largo, y + self.largo
 
 
 class Unidades(EdificiosUnidades):
@@ -58,6 +81,7 @@ class Subditos(Unidades):
     def __init__(self, vida, ubicacion, sprite_sheet, vel_mov, danho, vel_ataque, rango_ataque, tipo):
         super().__init__(vida, ubicacion, sprite_sheet, vel_mov, danho, vel_ataque, rango_ataque)
         self.tipo = tipo
+        self.destino = None
 
 class Torre(EdificiosUnidades):
     formato_torre = []

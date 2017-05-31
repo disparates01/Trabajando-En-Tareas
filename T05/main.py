@@ -11,6 +11,7 @@ from edificios_unidades import Campeones, Subditos, Torre, Inhibidor, Nexo
 from tienda import Tienda
 
 from os import sep
+from math import sqrt
 
 
 # ------------------------------------------------------------------------------------------------------------- LOGGERS
@@ -40,6 +41,11 @@ class Juego(QThread, QtWidgets.QDialog):
         self.tienda = None
         # Partida guardada:
         self.partidas_guardadas = []
+        self.asesinatos = 0
+        self.muertes = 0
+        self.uso_habilidad = 0
+        self.puntos_obtenidos = 0
+        self.puntos_usados = 0
 
     warning.warning('Sacado del tetris. REVISAR Y MODIFICAR')
     def keyPressEvent(self, event):
@@ -71,12 +77,29 @@ class Juego(QThread, QtWidgets.QDialog):
     warning.warning('Completar')
     def checkear_colision(self, unidad):
         for objeto in self.objetos:
-            pass
+            if unidad
+        
+    def checkear_destino(self, coord_destino):
+        return coord_destino in [objeto.posicion for objeto in self.objetos]
 
-    warning.warning('Completar')
-    def checkear_rango(self):
-        pass
+    def esta_arriba_izq(self, coord1, coord2):
+        return (coord1[0] < coord2[0]) or (coord1[1] < coord2[1])
+        
+        
+    def checkear_rango(self, unidad, ):
+        rango = unidad.rango_ataque
+        for objeto in self.objetos:
+            distancia = self.distancias_entre_objetos(objeto, unidad)
+            if distancia <= rango:
+                warning.warning('Completar')
+                pass
 
+    def distancias(self, coord1, coord2):
+        x1, y1 = coord1.posicion
+        x2, y2 = coord2.posicion
+        return sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
+    # Base de datos partida --------------------------------------------------------------------------------------------
 
     def cargar_datos(self):
         # Carga los objetos de la tienda:
@@ -118,7 +141,25 @@ class Juego(QThread, QtWidgets.QDialog):
             self.partidas_guardadas = [filter(lambda x: x[0] != '#', (partida.strip().split(',') for partida in archivo))]
             if len(self.partidas_guardadas) > 0:
                 self.partidas_guardadas.sort(key=lambda x: x[0])
-            
+        info.info('Se han cargado todos los datos del juego')
+
+    # ------------------------------------------------------------------------------------------------------------------
+
+
+    def agregar_ultima_partida(self):
+        debug.debug('Agregar el numero de partida')
+        lista = [self.asesinatos, self.muertes, self.uso_habilidad, self.puntos_obtenidos, self.puntos_usados]
+        self.partidas_guardadas.append(lista)
+
+    def exportar_particas(self):
+        self.partidas_guardadas.sort()
+        with open('INFO'+sep+'partida_guardada.csv', 'w', encoding='utf-8') as archivo:
+            archivo.write('# NUMERO PARTIDA(5 la mas antigua), ASESINATOS, MUERTES, ACTIVACION HABILIDAD, PUNTOS OBTENIDOS, PUNTOS USADOS')
+            for partida in self.partidas_guardadas:
+                archivo.write(','.join(partida))
+
+
+
             
 
 
