@@ -3,7 +3,6 @@
 
 # Otros archivos y carpetas extra
 tiempo_programacion.txt
-*.log
 Servidor/Canciones
 
 # Byte-compiled / optimized / DLL files

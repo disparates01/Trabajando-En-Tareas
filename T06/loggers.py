@@ -1,4 +1,4 @@
-from logging import Formatter, StreamHandler, FileHandler, Logger, INFO, ERROR, WARNING, DEBUG
+from logging import (Formatter, StreamHandler, FileHandler, Logger, INFO, ERROR, WARNING, DEBUG)
 from datetime import datetime
 from os import sep
 
@@ -33,11 +33,14 @@ class MyLogger(Logger):
             self.file_handler.setFormatter(self.formatter)
             self.addHandler(self.file_handler)
 
+
 def prueba():
     info = MyLogger(__name__, nombre_archivo='prueba.log')
     info.info('hola')
 
 
 if __name__ == '__main__':
-    info = MyLogger(__name__, nombre_archivo='prueba.log')
-    info.info('hola')
+    funcion = MyLogger(__name__, nombre_archivo='prueba.log')
+    funcion.info('bye')
+
+    prueba()
