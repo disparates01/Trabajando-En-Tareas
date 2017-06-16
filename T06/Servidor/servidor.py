@@ -33,10 +33,6 @@ log_d = MyLogger(__name__, name='SERVIDOR',
 space = MyLogger(__name__, formatter='%(message)s')
 
 
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   AQUI SE SE DEFINEN EL HOST Y EL PORT   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-HOST = gethostbyname(gethostname())
-PORT = 8000
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # ------------------------------------------------------------------------------------------------------------- SERVIDOR
 
@@ -45,10 +41,14 @@ class Servidor:
         space.info('')
         log_i.info('Iniciando servidor...')
         space.info('')
-        self.HOST = HOST
+        if HOST:
+            self.HOST = HOST
+        else:
+            self.HOST = gethostbyname(gethostname())
         self.PORT = PORT
         self.socket = socket(AF_INET, SOCK_STREAM)
         self.funcionando = True
+        self.procesador_comandos = None
         # Ejecución de funciones:
         self.bind_and_listen()
         self.aceptar_conexiones()
@@ -92,29 +92,44 @@ class Servidor:
                 socket.send(bytes_tamano + bytes_tipo + bytes_reproduccion + bytes_archivo)
 
 
-
-    def thread_escuchar_cliente(self, socket_cliente):
-        while self.funcionando:
-            bytes_largo_respuesta = socket_cliente.recv(4)
-            largo_respuesta = int.from_bytes(bytes_largo_respuesta, byteorder='big')
-            respuesta = b''
-
-            while len(respuesta) < largo_respuesta:
-                respuesta += socket_cliente.recv(256)
-            recibido = respuesta.decode('utf-8')
-            if recibido != '':
-                respuesta = self.manejo_de_comandos(recibido, socket_cliente)
-                self.send(respuesta, socket_cliente)
+    def thread_escuchar_cliente(self, cliente):
+        while self.funcionando and cliente.conectado:
+            try:
+                bytes_largo_respuesta = cliente.socket.recv(4)
+                largo_respuesta = int.from_bytes(bytes_largo_respuesta, byteorder='big')
+                respuesta = b''
+                while len(respuesta) < largo_respuesta:
+                    respuesta += cliente.socket.recv(256)
+                recibido = respuesta.decode('utf-8')
+                if recibido != '':
+                    respuesta = self.procesador_comandos(recibido)
+                    self.enviar_mensaje(respuesta, cliente.socket)
+            except:
+                log_i.info('Se ha desconectado "{}" desde {}'.format(cliente.nombre, cliente.direccion))
+                cliente.conectado = False
 
     def thread_aceptar_conexiones(self):
         while self.funcionando:
-            try:
-                socket_cliente, direccion = self.socket.accept()
+            # try:
+            socket_cliente, direccion = self.socket.accept()
+            nombre_usuario = socket_cliente.recv(20)
+            nombre_usuario = nombre_usuario.decode('utf-8').replace(' ','')
+            log_i.info('{} intentando conectarse desde {} ...'.format(nombre_usuario, direccion))
+            if ClienteUsuario.usuario_valido(nombre_usuario):
+                usuario = ClienteUsuario.agregar_usuario(socket_cliente, direccion, nombre_usuario)
+                mensaje = 1
+                socket_cliente.send(mensaje.to_bytes(1, 'big'))
+                log_i.info('CONEXIÓN ACEPTADA. Se conecto {} desde {}'.format(nombre_usuario, direccion))
                 thread_escucha = Thread(target=self.thread_escuchar_cliente,
-                                        args=(socket_cliente,))
+                                        args=(usuario,))
                 thread_escucha.start()
-            except:
-                log_i.info('Conexión terminada.')
+            else:
+                log_i.info('CONEXIÓN RECHAZADA. Ya existe un usuario con el nombre "{}"'.format(nombre_usuario))
+                mensaje = 0
+                socket_cliente.send(mensaje.to_bytes(1,'big'))
+                socket_cliente.close()
+            # except:
+            #     log_i.info('Conexión terminada.')
 
     def aceptar_conexiones(self):
         thread_conexiones = Thread(target=self.thread_aceptar_conexiones)
@@ -137,7 +152,8 @@ class ProcesadorComandos:
         self.comandos = {'desconectar': [None, 'Desconecta al cliente del servidor.'],
                          'terminar_servidor': [self.terminar_servidor, 'Finaliza la ejecución del servidor.'],
                          'usuario': [None, 'Solicita la incorporación de un usuario.'],
-                         'lista_comandos': [self.lista_comandos, 'Muestra los comandos validos.'],}
+                         'lista_comandos': [self.lista_comandos, 'Muestra los comandos validos.'],
+                         'chat': [None,'Recibe un mensaje de chat y lo reeenvía a todos los usuarios']}
         self.recibir_comandos_consola()
 
 
@@ -183,28 +199,31 @@ class ProcesadorComandos:
 
 
 class ClienteUsuario:
-    clientes = []
+    usuarios = []
 
     def __init__(self, socket, direccion, nombre):
         self.socket = socket
         self.direccion = direccion
         self.nombre = nombre
+        self.conectado = True
+        ClienteUsuario.usuarios.append(self)
+
 
     @staticmethod
-    def usuario_valido(self, nombre_usuario):
+    def usuario_valido(nombre_usuario):
         '''Verifica si ya existe un usuario activo con ese nombre, en cuyo casoretorna False. De lo contrario True'''
-        for cliente in ClienteUsuario.clientes:
+        for cliente in ClienteUsuario.usuarios:
             if cliente.nombre == nombre_usuario:
                 return False
-            return True
+        return True
 
     @staticmethod
-    def agregar_usuario(self, *args):
-        ClienteUsuario.clientes.append(ClienteUsuario(*args))
+    def agregar_usuario(*args):
+        return ClienteUsuario(*args)
 
 
     @staticmethod
-    def eliminar_usuario(self):
+    def eliminar_usuario():
         pass
 
 
@@ -217,9 +236,7 @@ class ClienteUsuario:
 
 
 
-if __name__ == '__main__':
-
-    servidor = Servidor(HOST, PORT)
+# if __name__ == '__main__':
 
     # while True:
     #     sleep(0.01)

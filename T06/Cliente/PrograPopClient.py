@@ -2,12 +2,7 @@ __author__ = 'Ricardo Del Río'
 
 # Propios:
 from loggers import MyLogger
-from Servidor.servidor import Servidor, ClienteUsuario, ProcesadorComandos
-
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   AQUI SE SE DEFINEN EL HOST Y EL PORT   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-HOST = None
-PORT = 8000
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+from Cliente.cliente import Cliente, ProcesadorComandos, HOST, PORT, nombre_usuario
 
 # -------------------------------------------------------------------------------------------------------------- LOGGERS
 
@@ -27,11 +22,11 @@ space = MyLogger(__name__, formatter='%(message)s')
 
 
 
-class PrograPopServer:
+class PrograPopClient:
     def start(self):
-        self.servidor = Servidor(HOST, PORT)
-        self.procesador_comandos = ProcesadorComandos(self.servidor)
-        self.servidor.procesador_comandos = self.procesador_comandos
+        self.client = Cliente(HOST, PORT, nombre_usuario)
+        self.procesador_comandos = ProcesadorComandos(self.client)
+        self.client.procesador_comandos = self.procesador_comandos
 
 
 
@@ -42,5 +37,5 @@ class Sala:
     pass
 
 if __name__ == '__main__':
-    juego = PrograPopServer()
+    juego = PrograPopClient()
     juego.start()
